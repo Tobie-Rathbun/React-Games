@@ -47,33 +47,38 @@ const changeCardTexture = (mesh: BABYLON.Mesh, scene: BABYLON.Scene) => {
 };
 
 // Animations
-const addFloatingAnimation = (mesh: BABYLON.Mesh, scene: BABYLON.Scene) => {
-  // Remove any existing floating animations
-  scene.stopAnimation(mesh, "floatingAnimation");
+const addFloatingAnimation = (
+    mesh: BABYLON.Mesh,
+    scene: BABYLON.Scene
+): void => { // Explicitly define the return type
+    scene.stopAnimation(mesh, "floatingAnimation"); // Ensure no conflicting floating animations
 
-  const animation = new BABYLON.Animation(
-    "floatingAnimation",
-    "position.y",
-    60,
-    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
-  );
+    const animation = new BABYLON.Animation(
+        "floatingAnimation",
+        "position.y",
+        60,
+        BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+        BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+    );
 
-  const keys = [
-    { frame: 0, value: mesh.position.y },
-    { frame: 30, value: mesh.position.y + 0.2 },
-    { frame: 60, value: mesh.position.y },
-  ];
+    const keys = [
+        { frame: 0, value: mesh.position.y },
+        { frame: 30, value: mesh.position.y + 0.2 },
+        { frame: 60, value: mesh.position.y },
+    ];
 
-  animation.setKeys(keys);
+    animation.setKeys(keys);
 
-  const easingFunction = new BABYLON.SineEase();
-  easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-  animation.setEasingFunction(easingFunction);
+    const easingFunction = new BABYLON.SineEase();
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+    animation.setEasingFunction(easingFunction);
 
-  mesh.animations.push(animation);
-  scene.beginAnimation(mesh, 0, 60, true);
+    mesh.animations = []; // Clear existing animations
+    mesh.animations.push(animation); // Add the new animation
+
+    scene.beginAnimation(mesh, 0, 60, true);
 };
+
 
 const addHoverInteraction = (
   mesh: BABYLON.Mesh,
@@ -87,7 +92,7 @@ const addHoverInteraction = (
     new BABYLON.ExecuteCodeAction(
       BABYLON.ActionManager.OnPointerOverTrigger,
       () => {
-        if (isAnimating.current) return;
+        if (isAnimating.current) return; // Prevent multiple triggers
         isAnimating.current = true;
 
         // Stop floating animation during spin
@@ -121,7 +126,7 @@ const addHoverInteraction = (
 
         animatable.onAnimationEnd = () => {
           isAnimating.current = false;
-          addFloatingAnimation(mesh, scene); // Resume floating animation
+          addFloatingAnimation(mesh, scene); // Resume floating animation unconditionally
         };
       }
     )
