@@ -4,6 +4,13 @@ import * as BABYLON from "@babylonjs/core";
 import SpinCard from "@components/SpinCard";
 export const dynamic = 'force-dynamic';
 
+// Scale of card
+const relWidth = 3.5;
+const relHeight = 0.05;
+const relDepth = 2.5;
+const relModifier = 0.66;
+
+
 const Invite: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scene, setScene] = useState<BABYLON.Scene | null>(null);
@@ -43,7 +50,13 @@ const Invite: React.FC = () => {
         ref={canvasRef}
         style={{ width: "100vw", height: "100vh", display: "block" }}
       />
-      {scene && <SpinCard scene={scene} card="AH" />}
+      {scene && (
+        <SpinCard
+          scene={scene}
+          card="AH"
+          scale={{ width: relWidth, height: relHeight, depth: relDepth, modifier: relModifier }}
+        />
+      )}
     </div>
   );
 };

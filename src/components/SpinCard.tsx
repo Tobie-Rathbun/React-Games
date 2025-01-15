@@ -11,11 +11,6 @@ const validCards = [
   "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "0S", "JS", "QS", "KS", "AS",
 ];
 
-// Scale of card
-const relWidth = 3.5;
-const relHeight = 0.05;
-const relDepth = 2.5;
-const relModifier = 0.66;
 
 // Rotation of card
 const relRotX = Math.PI / 32;
@@ -185,9 +180,11 @@ const addHoverInteraction = (
 const SpinCard = ({
     scene,
     card,
+    scale: { width, height, depth, modifier },
   }: {
     scene: BABYLON.Scene;
     card: string;
+    scale: { width: number; height: number; depth: number; modifier: number };
   }) => {
     const cardMeshRef = useRef<BABYLON.Mesh | null>(null);
     const isAnimating = useRef(false);
@@ -213,9 +210,9 @@ const SpinCard = ({
       const cardMesh = BABYLON.MeshBuilder.CreateBox(
         card,
         {
-          width: relWidth * relModifier,
-          height: relHeight * relModifier,
-          depth: relDepth * relModifier,
+          width: width * modifier,
+          height: height * modifier,
+          depth: depth * modifier,
           faceUV: faceUV,
         },
         scene
