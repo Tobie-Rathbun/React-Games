@@ -5,6 +5,8 @@ import { useAnimate } from 'framer-motion';
 import Link from 'next/link';
 import './globals.css';
 
+// Pull request and review test for project
+
 export default function Home() {
   // Constant Declarations
   const [wrapper1, animateWrapper1] = useAnimate();

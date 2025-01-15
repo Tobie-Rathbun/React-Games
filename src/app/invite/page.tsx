@@ -22,14 +22,21 @@ const Invite: React.FC = () => {
     const sceneInstance = new BABYLON.Scene(engine);
     sceneInstance.clearColor = new BABYLON.Color4(0, 0, 0, 0);
 
-    new BABYLON.ArcRotateCamera(
+    const camera = new BABYLON.ArcRotateCamera(
       "camera",
       Math.PI / 2,
       Math.PI / 3,
       5,
       BABYLON.Vector3.Zero(),
       sceneInstance
-    ).attachControl(canvasRef.current, true);
+    );
+    
+    // Attach the camera to the canvas
+    camera.attachControl(canvasRef.current, true);
+    
+    // Disable all user interactions
+    camera.inputs.clear(); // Clear all inputs to disable user interactions
+    
 
     new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), sceneInstance);
 
