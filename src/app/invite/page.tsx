@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SpinCard from "@components/SpinCard";
 import TitleCard from "@components/TitleCard";
 export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
-  const [relModifier, setRelModifier] = useState(0.66);
+  const [relModifier] = useState(0.66);
 
   
 

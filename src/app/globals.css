@@ -1405,12 +1405,64 @@ span.emoji {
 @media (max-width: 768px) {
   .titleCard {
     
-    top: 60%; 
+    top: 70%; 
+    left: 50%; 
+    width: 60%;
+  }
+
+  .spinCard {
+    right: 30%;
+  }
+
+  .header {
+    font-size: 3rem;
+    color: var(--highlight-color);
+    margin: 0 0 8px;
+  }
+  
+  .subheader {
+    font-size: 1.5rem;
+    color: var(--highlight-color-light);
+    margin: 0 0 16px;
+  }
+  
+  .bio {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+@media (max-width: 647px) {
+  .titleCard {
+    
+    top: 55%; 
     left: 50%; 
     width: 80%;
   }
 
   .spinCard {
+    top: 5%;
     right: 30%;
+  }
+
+  .header {
+    font-size: 2rem;
+    color: var(--highlight-color);
+    margin: 0 0 8px;
+  }
+  
+  .subheader {
+    font-size: 1rem;
+    color: var(--highlight-color-light);
+    margin: 0 0 16px;
+  }
+  
+  .bio {
+    font-size: 0.7rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin: 0;
   }
 }
