@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import SpinCard from "@components/SpinCard";
 import TitleCard from "@components/TitleCard";
+import RSVPButton from "@/components/RSVPButton";
+import RSVPList from "@/components/RSVPList";
 export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
-  const [relModifier] = useState(0.8);
-
-  
+  const [relModifier] = useState(0.75);
+  const [rsvpList, setRsvpList] = useState<string[]>([]); // Shared state for RSVP list
 
   return (
     <div className="container">
@@ -28,6 +29,14 @@ const Invite: React.FC = () => {
             </>
           }
         />
+      </div>
+      <div className="RSVPButton">
+        {/* Pass shared state as props */}
+        <RSVPButton rsvpList={rsvpList} setRsvpList={setRsvpList} />
+      </div>
+      <div className="RSVPList">
+        {/* Pass shared state as props */}
+        <RSVPList rsvpList={rsvpList} />
       </div>
     </div>
   );
