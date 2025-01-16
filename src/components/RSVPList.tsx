@@ -1,27 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-const RSVPList = () => {
-  const [rsvpList, setRsvpList] = useState<string[]>([]);
-  const [error, setError] = useState("");
-
-  // Fetch RSVP'd names
-  useEffect(() => {
-    const fetchRSVPs = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`);
-        setRsvpList(response.data.rsvpList);
-        setError("");
-      } catch (err) {
-        console.error("Error fetching RSVP list:", err);
-        setError("Failed to load RSVP list.");
-      }
-    };
-
-    fetchRSVPs();
-  }, []);
-
+const RSVPList = ({ rsvpList }: { rsvpList: string[] }) => {
   return (
     <div
       style={{
@@ -35,9 +15,7 @@ const RSVPList = () => {
       }}
     >
       <h3 style={{ margin: "0 0 1em", fontSize: "1.25rem", color: "#fff" }}>RSVP List</h3>
-      {error ? (
-        <p style={{ color: "red", fontSize: "0.9rem" }}>{error}</p>
-      ) : rsvpList.length > 0 ? (
+      {rsvpList.length > 0 ? (
         <ul
           style={{
             listStyle: "none",

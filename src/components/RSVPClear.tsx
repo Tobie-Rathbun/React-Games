@@ -2,13 +2,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const RSVPClear = () => {
+const RSVPClear = ({
+  setRsvpList,
+}: {
+  setRsvpList: (list: string[]) => void;
+}) => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   const handleClear = async () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`);
+      setRsvpList([]); // Clear the RSVP list in the parent state
       setMessage("All RSVPs have been cleared.");
       setError("");
     } catch (err) {

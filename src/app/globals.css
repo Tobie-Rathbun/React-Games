@@ -1337,7 +1337,7 @@ span.emoji {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden; /* Prevent overflow issues */
+  margin-bottom: 20%;
 }
 
 /* SpinCard Component */
@@ -1405,14 +1405,14 @@ span.emoji {
 
 @media (max-width: 768px) {
   .titleCard {
-    
-    top: 74%; 
+    top: 95%; 
     left: 50%; 
     width: 60%;
   }
 
   .spinCard {
     right: 24%;
+    top: 12%;;
   }
 
   .header {
@@ -1478,8 +1478,52 @@ span.emoji {
 
 
 /* RSVP */
+.RSVPButton {
+  position: absolute;
+  top: 70%;
+  left: 10%;
+}
 
-.RSVP {
-  width: 100%;
-  max-width: 400px; /* Restrict RSVP button width */
+.RSVPList {
+  position: absolute;
+  top: 70%;
+  left: 40%;
+}
+
+@media (max-width: 1080px) {
+  .RSVPButton {
+    left: 5%;
+  }
+}
+
+@media (max-width: 940px) {
+  .RSVPButton {
+    left: 3%;
+  }
+
+  .RSVPList {
+    left: 43%;
+  }
+}
+
+@media (max-width: 835px) {
+  .RSVPButton {
+    left: 3%;
+  }
+
+  .RSVPList {
+    left: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .RSVPButton {
+    top: 1%;
+    left: 2.2%;
+  }
+
+  .RSVPList {
+    top: 1%;
+    left: 70%;
+  }
 }
