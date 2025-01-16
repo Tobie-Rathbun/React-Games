@@ -7,6 +7,28 @@ const client = new faunadb.Client({
 });
 
 exports.handler = async (event) => {
+  // Resolve the database path, ensuring compatibility with Netlify Functions
+  const dbPath = path.join(process.env.LAMBDA_TASK_ROOT || __dirname, "data", "rsvp.db");
+  console.log("Resolved database path:", dbPath);
+
+  const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+      console.error("Failed to open database:", err);
+    } else {
+      console.log("Database connected successfully.");
+    }
+  });
+
+  const closeDb = () => {
+    db.close((err) => {
+      if (err) {
+        console.error("Error closing the database:", err);
+      } else {
+        console.log("Database connection closed successfully.");
+      }
+    });
+  };
+
   if (event.httpMethod === "OPTIONS") {
     // Handle CORS preflight request
     return {
@@ -21,114 +43,103 @@ exports.handler = async (event) => {
 
   // GET handler: Fetch RSVP list
   if (event.httpMethod === "GET") {
-    try {
-      const response = await client.query(
-        q.Map(
-          q.Paginate(q.Documents(q.Collection("RSVP"))),
-          q.Lambda("ref", q.Get(q.Var("ref")))
-        )
-      );
-
-      const rsvpList = response.data.map((doc) => doc.data.name);
-      const spotsLeft = Math.max(0, 3 - rsvpList.length);
-
-      return {
-        statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ rsvpList, spotsLeft }),
-      };
-    } catch (error) {
-      console.error("Error fetching RSVPs:", error);
-      return {
-        statusCode: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
-      };
-    }
+    return new Promise((resolve) => {
+      db.all("SELECT name FROM rsvp", (err, rows) => {
+        closeDb(); // Close the database connection
+        if (err) {
+          console.error("Error fetching RSVPs:", err);
+          resolve({
+            statusCode: 500,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
+          });
+        } else {
+          resolve({
+            statusCode: 200,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({
+              spotsLeft: 3 - rows.length,
+              rsvpList: rows.map((row) => row.name),
+            }),
+          });
+        }
+      });
+    });
   }
 
-  // POST handler: Add a new RSVP
   if (event.httpMethod === "POST") {
     const { name } = JSON.parse(event.body);
 
-    try {
-      const response = await client.query(q.Count(q.Documents(q.Collection("RSVP"))));
-      const spotsLeft = 3 - response;
+    return new Promise((resolve) => {
+      db.all("SELECT COUNT(*) as count FROM rsvp", (err, rows) => {
+        if (err) {
+          console.error("Error counting RSVPs:", err);
+          closeDb(); // Close the database connection
+          resolve({
+            statusCode: 500,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ error: "Failed to RSVP" }),
+          });
+          return;
+        }
 
-      if (spotsLeft <= 0) {
-        return {
-          statusCode: 400,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({ error: "No spots left" }),
-        };
-      }
-
-      await client.query(
-        q.Create(q.Collection("RSVP"), {
-          data: { name },
-        })
-      );
-
-      return {
-        statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ message: "RSVP successful" }),
-      };
-    } catch (error) {
-      console.error("Error adding RSVP:", error);
-      return {
-        statusCode: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ error: "Failed to RSVP" }),
-      };
-    }
+        const spotsLeft = 3 - rows[0].count;
+        if (spotsLeft <= 0) {
+          closeDb(); // Close the database connection
+          resolve({
+            statusCode: 400,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ error: "No spots left" }),
+          });
+        } else {
+          db.run("INSERT INTO rsvp (name) VALUES (?)", [name], (err) => {
+            closeDb(); // Close the database connection
+            if (err) {
+              console.error("Error inserting RSVP:", err);
+              resolve({
+                statusCode: 500,
+                headers: { "Access-Control-Allow-Origin": "*" },
+                body: JSON.stringify({ error: "Failed to RSVP" }),
+              });
+            } else {
+              resolve({
+                statusCode: 200,
+                headers: { "Access-Control-Allow-Origin": "*" },
+                body: JSON.stringify({ message: "RSVP successful" }),
+              });
+            }
+          });
+        }
+      });
+    });
   }
 
-  // DELETE handler: Clear all RSVPs
   if (event.httpMethod === "DELETE") {
-    try {
-      const response = await client.query(
-        q.Map(
-          q.Paginate(q.Documents(q.Collection("RSVP"))),
-          q.Lambda("ref", q.Delete(q.Var("ref")))
-        )
-      );
-
-      return {
-        statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ message: "RSVP list cleared" }),
-      };
-    } catch (error) {
-      console.error("Error clearing RSVPs:", error);
-      return {
-        statusCode: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ error: "Failed to clear RSVPs" }),
-      };
-    }
+    return new Promise((resolve) => {
+      db.run("DELETE FROM rsvp", (err) => {
+        closeDb(); // Close the database connection
+        if (err) {
+          console.error("Error clearing RSVP list:", err);
+          resolve({
+            statusCode: 500,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ error: "Failed to clear RSVPs" }),
+          });
+        } else {
+          resolve({
+            statusCode: 200,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ message: "RSVP list cleared" }),
+          });
+        }
+      });
+    });
   }
 
   // Method not allowed
   return {
     statusCode: 405,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
+    headers: { "Access-Control-Allow-Origin": "*" },
     body: "Method Not Allowed",
   };
 };
