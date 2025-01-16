@@ -3,6 +3,10 @@
   publish = ".next" # Directory where Next.js outputs static files
   functions = "netlify/functions" # Directory for Netlify serverless functions
 
+[functions]
+  included_files = ["functions/data/rsvp.db"]
+
+
 [[redirects]]
   from = "/api/*" # Redirect API requests to serverless functions
   to = "/.netlify/functions/:splat"
