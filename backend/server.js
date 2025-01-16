@@ -54,4 +54,17 @@ app.post("/rsvp", (req, res) => {
   });
 });
 
+// Clear all RSVPs
+app.delete("/rsvp", (req, res) => {
+  db.run("DELETE FROM rsvp", (err) => {
+    if (err) {
+      console.error("Failed to clear RSVPs:", err);
+      return res.status(500).json({ error: "Failed to clear RSVPs" });
+    }
+    console.log("RSVP list cleared");
+    res.json({ message: "RSVP list cleared" });
+  });
+});
+
+// Start the server
 app.listen(4242, () => console.log("Server running on http://localhost:4242"));

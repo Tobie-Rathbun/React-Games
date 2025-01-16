@@ -1,5 +1,6 @@
 import RSVPButton from "@/components/RSVPButton";
 import RSVPList from "@/components/RSVPList";
+import RSVPClear from "@/components/RSVPClear";
 
 const TestRSVP = () => (
   <>
@@ -8,6 +9,9 @@ const TestRSVP = () => (
     </div>
     <div>
       <RSVPList />
+    </div>
+    <div>
+      <RSVPClear />
     </div>
   </>
 );
