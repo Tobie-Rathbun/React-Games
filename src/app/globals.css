@@ -1437,13 +1437,12 @@ span.emoji {
 
 @media (max-width: 660px) {
   .titleCard {
-    
-    top: 60%;  
+    top: 80%;  
     width: 80%;
   }
 
   .spinCard {
-    top: -5%;
+    top: 10%;
   }
 
   .header {
@@ -1468,11 +1467,11 @@ span.emoji {
 
 @media (max-width: 490px) {
   .spinCard {
-    top: -2%;
+    top: 20%;
   }
   
   .titleCard {
-    top: 55%;  
+    top: 75%;  
   }
 }
 
