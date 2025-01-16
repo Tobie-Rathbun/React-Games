@@ -1,21 +1,29 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
-// Resolve the database path
-const dbPath = path.resolve(__dirname, "data", "rsvp.db");
-console.log("Resolved database path:", dbPath);
-
-// Initialize the database connection
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("Failed to open database:", err);
-  } else {
-    console.log("Database connected successfully.");
-  }
-});
-
 exports.handler = async (event) => {
-  // Handle CORS preflight requests
+  const dbPath = path.resolve(__dirname, "data", "rsvp.db");
+  console.log("Resolved database path:", dbPath);
+
+  // Open database connection for this invocation
+  const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+      console.error("Failed to open database:", err);
+    } else {
+      console.log("Database connected successfully.");
+    }
+  });
+
+  const closeDb = () => {
+    db.close((err) => {
+      if (err) {
+        console.error("Error closing the database:", err);
+      } else {
+        console.log("Database connection closed successfully.");
+      }
+    });
+  };
+
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -27,12 +35,12 @@ exports.handler = async (event) => {
     };
   }
 
-  // GET handler
   if (event.httpMethod === "GET") {
     return new Promise((resolve) => {
       db.all("SELECT name FROM rsvp", (err, rows) => {
         if (err) {
           console.error("Error fetching RSVPs:", err);
+          closeDb(); // Close the database connection
           resolve({
             statusCode: 500,
             headers: {
@@ -41,6 +49,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
           });
         } else {
+          closeDb(); // Close the database connection
           resolve({
             statusCode: 200,
             headers: {
@@ -56,7 +65,6 @@ exports.handler = async (event) => {
     });
   }
 
-  // POST handler
   if (event.httpMethod === "POST") {
     const { name } = JSON.parse(event.body);
 
@@ -64,6 +72,7 @@ exports.handler = async (event) => {
       db.all("SELECT COUNT(*) as count FROM rsvp", (err, rows) => {
         if (err) {
           console.error("Error counting RSVPs:", err);
+          closeDb(); // Close the database connection
           resolve({
             statusCode: 500,
             headers: {
@@ -76,6 +85,7 @@ exports.handler = async (event) => {
 
         const spotsLeft = 3 - rows[0].count;
         if (spotsLeft <= 0) {
+          closeDb(); // Close the database connection
           resolve({
             statusCode: 400,
             headers: {
@@ -87,6 +97,7 @@ exports.handler = async (event) => {
           db.run("INSERT INTO rsvp (name) VALUES (?)", [name], (err) => {
             if (err) {
               console.error("Error inserting RSVP:", err);
+              closeDb(); // Close the database connection
               resolve({
                 statusCode: 500,
                 headers: {
@@ -95,6 +106,7 @@ exports.handler = async (event) => {
                 body: JSON.stringify({ error: "Failed to RSVP" }),
               });
             } else {
+              closeDb(); // Close the database connection
               resolve({
                 statusCode: 200,
                 headers: {
@@ -109,47 +121,34 @@ exports.handler = async (event) => {
     });
   }
 
-  // DELETE handler
   if (event.httpMethod === "DELETE") {
     return new Promise((resolve) => {
-      console.log("Received DELETE request to clear RSVP list.");
-
-      db.serialize(() => {
-        db.run("DELETE FROM rsvp", (err) => {
-          if (err) {
-            console.error("Error clearing RSVP list:", err);
-            resolve({
-              statusCode: 500,
-              headers: {
-                "Access-Control-Allow-Origin": "*",
-              },
-              body: JSON.stringify({ error: "Failed to clear RSVPs" }),
-            });
-          } else {
-            console.log("Successfully cleared RSVP list.");
-            resolve({
-              statusCode: 200,
-              headers: {
-                "Access-Control-Allow-Origin": "*",
-              },
-              body: JSON.stringify({ message: "RSVP list cleared" }),
-            });
-          }
-        });
-      });
-
-      // Close the database connection after processing
-      db.close((err) => {
+      db.run("DELETE FROM rsvp", (err) => {
         if (err) {
-          console.error("Error closing the database after DELETE:", err);
+          console.error("Error clearing RSVP list:", err);
+          closeDb(); // Close the database connection
+          resolve({
+            statusCode: 500,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ error: "Failed to clear RSVPs" }),
+          });
         } else {
-          console.log("Database connection closed successfully.");
+          closeDb(); // Close the database connection
+          resolve({
+            statusCode: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ message: "RSVP list cleared" }),
+          });
         }
       });
     });
   }
 
-  // Method not allowed
+  closeDb(); // Close the database connection for unsupported methods
   return {
     statusCode: 405,
     headers: {
