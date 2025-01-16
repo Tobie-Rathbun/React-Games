@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
 const validCards = [
   "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "0H", "JH", "QH", "KH", "AH",
-  "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "0D", "JD", "QD", "KD", "ADi",
+  "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "0D", "JD", "QD", "KD", "AD",
   "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "0C", "JC", "QC", "KC", "AC",
   "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "0S", "JS", "QS", "KS", "AS",
 ];
@@ -24,7 +24,7 @@ const relWidth = 3.5;
 const relHeight = 0.05;
 const relDepth = 2.5;
 
-// Textures
+// Helper functions
 const getCardImage = (card: string): string => `/images/${card}.png`;
 
 const preloadTextures = (scene: BABYLON.Scene) => {
@@ -43,46 +43,40 @@ const changeCardTexture = (mesh: BABYLON.Mesh, scene: BABYLON.Scene) => {
   newMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
 
   if (mesh.material) {
-    mesh.material.dispose(); // Dispose the old material
+    mesh.material.dispose();
   }
   mesh.material = newMaterial;
 
   console.log(`Changed card to ${newCard}`);
 };
 
-// Animations
-const addFloatingAnimation = (
-    mesh: BABYLON.Mesh,
-    scene: BABYLON.Scene
-): void => { // Explicitly define the return type
-    scene.stopAnimation(mesh, "floatingAnimation"); // Ensure no conflicting floating animations
+const addFloatingAnimation = (mesh: BABYLON.Mesh, scene: BABYLON.Scene): void => {
+  scene.stopAnimation(mesh, "floatingAnimation");
 
-    const animation = new BABYLON.Animation(
-        "floatingAnimation",
-        "position.y",
-        60,
-        BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-        BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
-    );
+  const animation = new BABYLON.Animation(
+    "floatingAnimation",
+    "position.y",
+    60,
+    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+    BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+  );
 
-    const keys = [
-        { frame: 0, value: mesh.position.y },
-        { frame: 30, value: mesh.position.y + 0.2 },
-        { frame: 60, value: mesh.position.y },
-    ];
+  const keys = [
+    { frame: 0, value: mesh.position.y },
+    { frame: 30, value: mesh.position.y + 0.2 },
+    { frame: 60, value: mesh.position.y },
+  ];
 
-    animation.setKeys(keys);
+  animation.setKeys(keys);
 
-    const easingFunction = new BABYLON.SineEase();
-    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-    animation.setEasingFunction(easingFunction);
+  const easingFunction = new BABYLON.SineEase();
+  easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  animation.setEasingFunction(easingFunction);
 
-    mesh.animations = []; // Clear existing animations
-    mesh.animations.push(animation); // Add the new animation
-
-    scene.beginAnimation(mesh, 0, 60, true);
+  mesh.animations = [];
+  mesh.animations.push(animation);
+  scene.beginAnimation(mesh, 0, 60, true);
 };
-
 
 const addHoverInteraction = (
   mesh: BABYLON.Mesh,
@@ -96,10 +90,9 @@ const addHoverInteraction = (
     new BABYLON.ExecuteCodeAction(
       BABYLON.ActionManager.OnPointerOverTrigger,
       () => {
-        if (isAnimating.current) return; // Prevent multiple triggers
+        if (isAnimating.current) return;
         isAnimating.current = true;
 
-        // Stop floating animation during spin
         scene.stopAnimation(mesh, "floatingAnimation");
 
         const rotationAnimation = new BABYLON.Animation(
@@ -130,30 +123,60 @@ const addHoverInteraction = (
 
         animatable.onAnimationEnd = () => {
           isAnimating.current = false;
-          addFloatingAnimation(mesh, scene); // Resume floating animation unconditionally
+          addFloatingAnimation(mesh, scene);
         };
       }
     )
   );
 };
 
-// Primary function to export
 const SpinCard = ({
-  scene,
   card,
   scale: { modifier },
 }: {
-  scene: BABYLON.Scene;
   card: string;
   scale: { modifier: number };
 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardMeshRef = useRef<BABYLON.Mesh | null>(null);
   const isAnimating = useRef(false);
+  const [scene, setScene] = useState<BABYLON.Scene | null>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const engine = new BABYLON.Engine(canvasRef.current, true);
+    const sceneInstance = new BABYLON.Scene(engine);
+    sceneInstance.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+
+    const camera = new BABYLON.ArcRotateCamera(
+      "camera",
+      Math.PI / 2,
+      Math.PI / 3,
+      5,
+      BABYLON.Vector3.Zero(),
+      sceneInstance
+    );
+    camera.attachControl(canvasRef.current, true);
+    camera.inputs.clear();
+
+    new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), sceneInstance);
+
+    setScene(sceneInstance);
+
+    engine.runRenderLoop(() => {
+      sceneInstance.render();
+    });
+
+    return () => {
+      engine.dispose();
+    };
+  }, []);
 
   useEffect(() => {
     if (!scene) return;
 
-    preloadTextures(scene); // Preload textures
+    preloadTextures(scene);
 
     const texturePath = getCardImage(card);
 
@@ -187,7 +210,7 @@ const SpinCard = ({
 
     cardMeshRef.current = cardMesh;
 
-    addFloatingAnimation(cardMesh, scene); // Initial floating animation
+    addFloatingAnimation(cardMesh, scene);
     addHoverInteraction(cardMesh, scene, isAnimating, () =>
       changeCardTexture(cardMesh, scene)
     );
@@ -197,7 +220,7 @@ const SpinCard = ({
     };
   }, [scene, card]);
 
-  return null;
+  return <canvas ref={canvasRef} style={{ width: "100vw", height: "100vh", display: "block" }} />;
 };
 
 export default SpinCard;
