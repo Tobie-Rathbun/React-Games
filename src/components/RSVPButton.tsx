@@ -2,6 +2,11 @@
 import React, { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 
+interface FetchRSVPResponse {
+  spotsLeft: number;
+  rsvpList: string[];
+}
+
 interface APIErrorResponse {
   error?: string;
 }
@@ -20,11 +25,11 @@ const RSVPButton = ({
   useEffect(() => {
     const fetchRSVPs = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`);
+        const response = await axios.get<FetchRSVPResponse>(`${process.env.NEXT_PUBLIC_API_URL}`);
         setSpotsLeft(response.data.spotsLeft);
         setRsvpList(response.data.rsvpList);
       } catch (err: unknown) {
-        const axiosError = err as AxiosError;
+        const axiosError = err as AxiosError<APIErrorResponse>;
         console.error("Error fetching RSVPs:", axiosError.message);
         setError("Failed to load RSVP data.");
       }
@@ -45,7 +50,7 @@ const RSVPButton = ({
     }
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`, { name });
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}`, { name });
       setSpotsLeft(spotsLeft - 1);
       setRsvpList([...rsvpList, name.trim()]);
       setName("");
