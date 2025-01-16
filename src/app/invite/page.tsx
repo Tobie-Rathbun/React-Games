@@ -5,7 +5,7 @@ import TitleCard from "@components/TitleCard";
 export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
-  const [relModifier] = useState(0.66);
+  const [relModifier] = useState(0.8);
 
   
 
@@ -17,7 +17,7 @@ const Invite: React.FC = () => {
       <div className="titleCard">
         <TitleCard
           header="Poker Night"
-          subheader="7 p.m. at Tobie's"
+          subheader="7 p.m. on Friday at Tobie's"
           bio={
             <>
               $10 buy-ins, additional chips available.
