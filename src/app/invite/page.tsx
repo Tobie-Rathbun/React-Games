@@ -1,66 +1,34 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import * as BABYLON from "@babylonjs/core";
+import React, { useState } from "react";
 import SpinCard from "@components/SpinCard";
-export const dynamic = 'force-dynamic';
-
-// Scale of card
-const relModifier = 0.66;
-
+import TitleCard from "@components/TitleCard";
+export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [scene, setScene] = useState<BABYLON.Scene | null>(null);
+  const [relModifier] = useState(0.66);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const engine = new BABYLON.Engine(canvasRef.current, true);
-    const sceneInstance = new BABYLON.Scene(engine);
-    sceneInstance.clearColor = new BABYLON.Color4(0, 0, 0, 0);
-
-    const camera = new BABYLON.ArcRotateCamera(
-      "camera",
-      Math.PI / 2,
-      Math.PI / 3,
-      5,
-      BABYLON.Vector3.Zero(),
-      sceneInstance
-    );
-    
-    // Attach the camera to the canvas
-    camera.attachControl(canvasRef.current, true);
-    
-    // Disable all user interactions
-    camera.inputs.clear(); // Clear all inputs to disable user interactions
-    
-
-    new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), sceneInstance);
-
-    setScene(sceneInstance);
-
-    engine.runRenderLoop(() => {
-      sceneInstance.render();
-    });
-
-    return () => {
-      engine.dispose();
-    };
-  }, []);
+  
 
   return (
-    <div>
-      <canvas
-        ref={canvasRef}
-        style={{ width: "100vw", height: "100vh", display: "block" }}
-      />
-      {scene && (
-        <SpinCard
-          scene={scene}
-          card="AH"
-          scale={{ modifier: relModifier }}
+    <div className="container">
+      <div className="spinCard">
+        <SpinCard card="AH" scale={{ modifier: relModifier }} />
+      </div>
+      <div className="titleCard">
+        <TitleCard
+          header="Poker Night"
+          subheader="7 p.m. at Tobie's"
+          bio={
+            <>
+              $10 buy-ins, additional chips available.
+              <br />
+              Rewards will be distributed at the end of the night.
+              <br />
+              Snacks and drinks will be provided.
+            </>
+          }
         />
-      )}
+      </div>
     </div>
   );
 };

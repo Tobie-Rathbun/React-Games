@@ -179,6 +179,14 @@ a.link:hover {
   opacity: 1;
 }
 
+.hamburger-button {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--primary-text-color);
+  cursor: pointer;
+}
 
 .navbar-brand {
   font-size: 24px;
@@ -202,6 +210,18 @@ a.link:hover {
   transition: opacity 0.4s, transform 0.4s; /* Smooth transition for opacity and transform */
 }
 
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links.open {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
 .site-navbar .nav-link:hover {
   opacity: 1; /* Full opacity on hover */
   transform: scale(1.15);
@@ -217,6 +237,8 @@ a.link:hover {
   align-items: center; /* Aligns toggle button with other navbar links */
   position: relative;
   margin-right: 20px; /* Same spacing as other nav-links */
+  margin-top: -2.4%;
+  margin-bottom: -2.4%;
   white-space: nowrap; /* Prevent line breaks */
 }
 
@@ -227,10 +249,10 @@ a.link:hover {
   color: #FFFFFF; /* Match navbar link text color */
   font-size: 18px; /* Match navbar link font size */
   cursor: pointer;
-  padding: 10px 0; /* Consistent padding with other nav-links */
   text-decoration: none; /* Remove underline */
   opacity: 0.85; /* Match initial opacity */
   transition: opacity 0.4s, transform 0.4s; /* Smooth transitions */
+  margin-left: -4.85%;;
 }
 
 /* Hover Effects for Dropdown Toggle */
@@ -276,7 +298,27 @@ a.link:hover {
   transform: scale(1.05); /* Slight scaling for interaction */
 }
 
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: var(--dark-background);
+    border: 1px solid var(--chord-element-border);
+    border-radius: 8px;
+    padding: 10px;
+  }
 
+  .hamburger-button {
+    display: block;
+  }
+}
+
+
+/* Loading Animation */
 .loading-indicator {
   position: fixed;
   top: 0;
@@ -1286,4 +1328,141 @@ span.emoji {
 
 .wrapper {
   position: relative; /* Ensures animations with 'transform' work */
+}
+
+
+/* Ensure the parent container has relative positioning for absolute children */
+.container {
+  background-color: transparent;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Prevent overflow issues */
+}
+
+/* SpinCard Component */
+.spinCard {
+  position: relative;
+  width: 100%; /* Full width of the parent */
+  aspect-ratio: 16 / 9; /* Lock aspect ratio to 16:9 */
+}
+
+/* Ensure the canvas fills the container */
+.spinCard canvas {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+}
+
+
+/* TitleCard Component */
+.titleCard {
+  position: absolute;
+  top: 40%; 
+  left: 30%; 
+  transform: translate(-50%, -50%); /* Offset to truly center */
+  z-index: 2; 
+}
+
+/* TitleCard Container */
+.cardContainer {
+  position: relative;
+  background-color: var(--dark-background);
+  border: 1px solid var(--chord-element-border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.cardContainer:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Text Styling */
+.header {
+  font-size: 4rem;
+  color: var(--highlight-color);
+  margin: 0 0 8px;
+}
+
+.subheader {
+  font-size: 1.5rem;
+  color: var(--highlight-color-light);
+  margin: 0 0 16px;
+}
+
+.bio {
+  font-size: 1rem;
+  color: var(--secondary-text-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .titleCard {
+    
+    top: 70%; 
+    left: 50%; 
+    width: 60%;
+  }
+
+  .spinCard {
+    right: 30%;
+  }
+
+  .header {
+    font-size: 3rem;
+    color: var(--highlight-color);
+    margin: 0 0 8px;
+  }
+  
+  .subheader {
+    font-size: 1.5rem;
+    color: var(--highlight-color-light);
+    margin: 0 0 16px;
+  }
+  
+  .bio {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+@media (max-width: 647px) {
+  .titleCard {
+    
+    top: 55%; 
+    left: 50%; 
+    width: 80%;
+  }
+
+  .spinCard {
+    top: 5%;
+    right: 30%;
+  }
+
+  .header {
+    font-size: 2rem;
+    color: var(--highlight-color);
+    margin: 0 0 8px;
+  }
+  
+  .subheader {
+    font-size: 1rem;
+    color: var(--highlight-color-light);
+    margin: 0 0 16px;
+  }
+  
+  .bio {
+    font-size: 0.7rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin: 0;
+  }
 }
