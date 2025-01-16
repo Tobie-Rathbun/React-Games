@@ -1,19 +1,36 @@
 const sqlite3 = require("sqlite3").verbose();
-
 const db = new sqlite3.Database("./rsvp.db");
 
 exports.handler = async (event) => {
+  if (event.httpMethod === "OPTIONS") {
+    // Preflight request handling for CORS
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*", // Allow all origins or specify your domain
+        "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    };
+  }
+
   if (event.httpMethod === "GET") {
     return new Promise((resolve) => {
       db.all("SELECT name FROM rsvp", (err, rows) => {
         if (err) {
           resolve({
             statusCode: 500,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
             body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
           });
         } else {
           resolve({
             statusCode: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
             body: JSON.stringify({
               spotsLeft: 3 - rows.length,
               rsvpList: rows.map((row) => row.name),
@@ -26,12 +43,16 @@ exports.handler = async (event) => {
 
   if (event.httpMethod === "POST") {
     const { name } = JSON.parse(event.body);
+
     return new Promise((resolve) => {
       db.all("SELECT COUNT(*) as count FROM rsvp", (err, rows) => {
         const spotsLeft = 3 - rows[0].count;
         if (spotsLeft <= 0) {
           resolve({
             statusCode: 400,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
             body: JSON.stringify({ error: "No spots left" }),
           });
         } else {
@@ -39,11 +60,17 @@ exports.handler = async (event) => {
             if (err) {
               resolve({
                 statusCode: 500,
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                },
                 body: JSON.stringify({ error: "Failed to RSVP" }),
               });
             } else {
               resolve({
                 statusCode: 200,
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                },
                 body: JSON.stringify({ message: "RSVP successful" }),
               });
             }
@@ -53,5 +80,11 @@ exports.handler = async (event) => {
     });
   }
 
-  return { statusCode: 405, body: "Method Not Allowed" };
+  return {
+    statusCode: 405,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: "Method Not Allowed",
+  };
 };
