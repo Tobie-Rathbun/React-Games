@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+
+interface APIErrorResponse {
+  error?: string;
+}
 
 const RSVPButton = ({
   rsvpList,
@@ -13,15 +17,15 @@ const RSVPButton = ({
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
-  // Fetch current RSVPs on mount
   useEffect(() => {
     const fetchRSVPs = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`);
         setSpotsLeft(response.data.spotsLeft);
         setRsvpList(response.data.rsvpList);
-      } catch (err) {
-        console.error("Error fetching RSVPs:", err);
+      } catch (err: unknown) {
+        const axiosError = err as AxiosError;
+        console.error("Error fetching RSVPs:", axiosError.message);
         setError("Failed to load RSVP data.");
       }
     };
@@ -43,18 +47,19 @@ const RSVPButton = ({
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`, { name });
       setSpotsLeft(spotsLeft - 1);
-      setRsvpList([...rsvpList, name.trim()]); // Update RSVP list dynamically
-      setName(""); // Clear input field
-      setError(""); // Clear error
-    } catch (err: any) {
-      console.error("Error RSVPing:", err);
-      setError(err.response?.data?.error || "Failed to RSVP.");
+      setRsvpList([...rsvpList, name.trim()]);
+      setName("");
+      setError("");
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<APIErrorResponse>;
+      console.error("Error RSVPing:", axiosError.message);
+      setError(axiosError.response?.data?.error || "Failed to RSVP.");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleRSVP(); // Allow submitting with "Enter"
+      handleRSVP();
     }
   };
 
@@ -89,7 +94,7 @@ const RSVPButton = ({
           value={name}
           placeholder="Enter your name"
           onChange={(e) => setName(e.target.value)}
-          onKeyPress={handleKeyPress} // Add support for "Enter"
+          onKeyPress={handleKeyPress}
           style={{
             flex: 1,
             padding: "0.5em",
