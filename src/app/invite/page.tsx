@@ -1,15 +1,48 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SpinCard from "@components/SpinCard";
-export const dynamic = 'force-dynamic';
-
-// Scale of card
-const relModifier = 0.66;
+import TitleCard from "@components/TitleCard";
+export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
+  const [relModifier, setRelModifier] = useState(0.66);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setRelModifier(0.5); // Smaller scale for mobile
+      } else {
+        setRelModifier(0.66); // Default scale for larger screens
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div>
-      <SpinCard card="AH" scale={{ modifier: relModifier }} />
+    <div className="container">
+      <div className="spinCard">
+        <SpinCard card="AH" scale={{ modifier: relModifier }} />
+      </div>
+      <div className="titleCard">
+        <TitleCard
+          header="Poker Night"
+          subheader="7 p.m. at Tobie's"
+          bio={
+            <>
+              $10 buy-ins, additional chips available.
+              <br />
+              Rewards will be distributed at the end of the night.
+              <br />
+              Snacks and drinks will be provided.
+            </>
+          }
+        />
+      </div>
     </div>
   );
 };

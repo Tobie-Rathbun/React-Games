@@ -6,7 +6,7 @@ import "@babylonjs/loaders/glTF";
 
 const validCards = [
   "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "0H", "JH", "QH", "KH", "AH",
-  "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "0D", "JD", "QD", "KD", "AD",
+  "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "0D", "JD", "QD", "KD", "ADi",
   "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "0C", "JC", "QC", "KC", "AC",
   "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "0S", "JS", "QS", "KS", "AS",
 ];
@@ -50,6 +50,8 @@ const changeCardTexture = (mesh: BABYLON.Mesh, scene: BABYLON.Scene) => {
   console.log(`Changed card to ${newCard}`);
 };
 
+
+// Animations
 const addFloatingAnimation = (mesh: BABYLON.Mesh, scene: BABYLON.Scene): void => {
   scene.stopAnimation(mesh, "floatingAnimation");
 
@@ -78,6 +80,8 @@ const addFloatingAnimation = (mesh: BABYLON.Mesh, scene: BABYLON.Scene): void =>
   scene.beginAnimation(mesh, 0, 60, true);
 };
 
+
+// Interactions
 const addHoverInteraction = (
   mesh: BABYLON.Mesh,
   scene: BABYLON.Scene,
@@ -129,6 +133,60 @@ const addHoverInteraction = (
     )
   );
 };
+
+const addClickInteraction = (
+  mesh: BABYLON.Mesh,
+  scene: BABYLON.Scene,
+  isAnimating: React.MutableRefObject<boolean>,
+  setNewCardTexture: () => void
+) => {
+  if (!mesh.actionManager) {
+    mesh.actionManager = new BABYLON.ActionManager(scene);
+  }
+
+  mesh.actionManager.registerAction(
+    new BABYLON.ExecuteCodeAction(
+      BABYLON.ActionManager.OnPickTrigger,
+      () => {
+        if (isAnimating.current) return; // Prevent multiple triggers
+        isAnimating.current = true;
+
+        // Perform the spin animation
+        const spinAnimation = new BABYLON.Animation(
+          "clickSpin",
+          "rotation.y",
+          60,
+          BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+          BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        const keys = [
+          { frame: 0, value: mesh.rotation.y },
+          { frame: 60, value: mesh.rotation.y + Math.PI * 2 },
+        ];
+        spinAnimation.setKeys(keys);
+
+        const easingFunction = new BABYLON.SineEase();
+        easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+        spinAnimation.setEasingFunction(easingFunction);
+
+        mesh.animations.push(spinAnimation);
+        const animatable = scene.beginAnimation(mesh, 0, 60, false);
+
+        // Change card texture midway through the spin
+        setTimeout(() => {
+          setNewCardTexture();
+        }, 500); // Adjust the timing if needed
+
+        animatable.onAnimationEnd = () => {
+          isAnimating.current = false;
+        };
+      }
+    )
+  );
+};
+
+
 
 const SpinCard = ({
   card,
@@ -214,13 +272,16 @@ const SpinCard = ({
     addHoverInteraction(cardMesh, scene, isAnimating, () =>
       changeCardTexture(cardMesh, scene)
     );
+    addClickInteraction(cardMesh, scene, isAnimating, () =>
+      changeCardTexture(cardMesh, scene)
+    );
 
     return () => {
       cardMesh.dispose();
     };
   }, [scene, card]);
 
-  return <canvas ref={canvasRef} style={{ width: "100vw", height: "100vh", display: "block" }} />;
+  return <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />;
 };
 
 export default SpinCard;
