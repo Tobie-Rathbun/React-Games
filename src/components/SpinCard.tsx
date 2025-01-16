@@ -215,7 +215,7 @@ const SpinCard = ({
       BABYLON.Vector3.Zero(),
       sceneInstance
     );
-    camera.attachControl(canvasRef.current, true);
+    camera.attachControl(canvasRef.current, true, false);
     camera.inputs.clear();
 
     new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), sceneInstance);

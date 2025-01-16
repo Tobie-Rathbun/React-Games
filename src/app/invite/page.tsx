@@ -7,21 +7,7 @@ export const dynamic = "force-dynamic";
 const Invite: React.FC = () => {
   const [relModifier, setRelModifier] = useState(0.66);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setRelModifier(0.5); // Smaller scale for mobile
-      } else {
-        setRelModifier(0.66); // Default scale for larger screens
-      }
-    };
-
-    // Initial check
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  
 
   return (
     <div className="container">

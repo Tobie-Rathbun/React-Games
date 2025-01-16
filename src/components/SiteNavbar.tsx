@@ -2,42 +2,45 @@
 
 import "../app/globals.css";
 import Link from "next/link";
-import { usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const SiteNavbar = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const target = event.currentTarget as HTMLAnchorElement;
     const href = target.getAttribute("href");
-  
+
     if (href === pathname) {
-      // Force a reload or reset state even when navigating to the same page
       if (href === "/") {
-        window.location.href = "/"; // Reload the page
+        window.location.href = "/";
       }
       event.preventDefault();
       setIsDropdownOpen(false);
+      setIsMobileMenuOpen(false);
       console.log("Already on the current page");
       return;
     }
-  
+
     setIsLoading(true);
-    setIsDropdownOpen(false); // Close dropdown when a link is clicked
+    setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
   };
-  
-  
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   useEffect(() => {
-    // Simulate the end of loading when the pathname or search params change
-    setIsLoading(false); // This ensures the spinner stops after the page renders
+    setIsLoading(false);
   }, [pathname]);
 
   return (
@@ -46,7 +49,13 @@ const SiteNavbar = () => {
         <Link href="/" className="navbar-brand" onClick={handleLinkClick}>
           Tobie&#39;s Projects
         </Link>
-        <div>
+        <button
+          className="hamburger-button"
+          onClick={handleMobileMenuToggle}
+        >
+          ☰
+        </button>
+        <div className={`nav-links ${isMobileMenuOpen ? "open" : ""}`}>
           <Link href="/" className="nav-link" onClick={handleLinkClick}>
             Home
           </Link>
@@ -60,13 +69,9 @@ const SiteNavbar = () => {
           >
             GitHub
           </a>
-          
 
           <div className="dropdown">
-            <button
-              className="dropdown-toggle"
-              onClick={handleDropdownToggle}
-            >
+            <button className="dropdown-toggle" onClick={handleDropdownToggle}>
               Projects
             </button>
             {isDropdownOpen && (
