@@ -44,7 +44,7 @@ const SiteNavbar = () => {
     <div className="navbar-wrapper">
       <nav className="site-navbar">
         <Link href="/" className="navbar-brand" onClick={handleLinkClick}>
-          Tobie's Projects
+          Tobie&#39s Projects
         </Link>
         <div>
           <Link href="/" className="nav-link" onClick={handleLinkClick}>
