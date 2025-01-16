@@ -9,7 +9,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*", // Allow all origins or specify your domain
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
@@ -76,6 +76,30 @@ exports.handler = async (event) => {
                 body: JSON.stringify({ message: "RSVP successful" }),
               });
             }
+          });
+        }
+      });
+    });
+  }
+
+  if (event.httpMethod === "DELETE") {
+    return new Promise((resolve) => {
+      db.run("DELETE FROM rsvp", (err) => {
+        if (err) {
+          resolve({
+            statusCode: 500,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ error: "Failed to clear RSVPs" }),
+          });
+        } else {
+          resolve({
+            statusCode: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ message: "RSVP list cleared" }),
           });
         }
       });
