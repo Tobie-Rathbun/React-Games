@@ -1345,6 +1345,7 @@ span.emoji {
   position: relative;
   width: 100%; /* Full width of the parent */
   aspect-ratio: 16 / 9; /* Lock aspect ratio to 16:9 */
+  top: -5%;
 }
 
 /* Ensure the canvas fills the container */
@@ -1405,7 +1406,7 @@ span.emoji {
 @media (max-width: 768px) {
   .titleCard {
     
-    top: 70%; 
+    top: 74%; 
     left: 50%; 
     width: 60%;
   }
@@ -1442,7 +1443,7 @@ span.emoji {
   }
 
   .spinCard {
-    top: 5%;
+    top: -5%;
   }
 
   .header {
@@ -1466,7 +1467,11 @@ span.emoji {
 }
 
 @media (max-width: 490px) {
+  .spinCard {
+    top: -2%;
+  }
+  
   .titleCard {
-    top: 53%;  
+    top: 55%;  
   }
 }
