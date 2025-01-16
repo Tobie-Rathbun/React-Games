@@ -5,9 +5,6 @@ import SpinCard from "@components/SpinCard";
 export const dynamic = 'force-dynamic';
 
 // Scale of card
-const relWidth = 3.5;
-const relHeight = 0.05;
-const relDepth = 2.5;
 const relModifier = 0.66;
 
 
@@ -61,7 +58,7 @@ const Invite: React.FC = () => {
         <SpinCard
           scene={scene}
           card="AH"
-          scale={{ width: relWidth, height: relHeight, depth: relDepth, modifier: relModifier }}
+          scale={{ modifier: relModifier }}
         />
       )}
     </div>

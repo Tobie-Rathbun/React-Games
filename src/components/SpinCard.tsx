@@ -20,6 +20,10 @@ const relPosX = -2;
 const relPosY = 0.45;
 const relPosZ = 0;
 
+const relWidth = 3.5;
+const relHeight = 0.05;
+const relDepth = 2.5;
+
 // Textures
 const getCardImage = (card: string): string => `/images/${card}.png`;
 
@@ -137,11 +141,11 @@ const addHoverInteraction = (
 const SpinCard = ({
   scene,
   card,
-  scale: { width, height, depth, modifier },
+  scale: { modifier },
 }: {
   scene: BABYLON.Scene;
   card: string;
-  scale: { width: number; height: number; depth: number; modifier: number };
+  scale: { modifier: number };
 }) => {
   const cardMeshRef = useRef<BABYLON.Mesh | null>(null);
   const isAnimating = useRef(false);
@@ -169,9 +173,9 @@ const SpinCard = ({
     const cardMesh = BABYLON.MeshBuilder.CreateBox(
       card,
       {
-        width: width * modifier,
-        height: height * modifier,
-        depth: depth * modifier,
+        width: relWidth * modifier,
+        height: relHeight * modifier,
+        depth: relDepth * modifier,
         faceUV: faceUV,
       },
       scene
