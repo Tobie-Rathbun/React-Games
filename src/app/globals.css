@@ -1475,3 +1475,11 @@ span.emoji {
     top: 55%;  
   }
 }
+
+
+/* RSVP */
+
+.RSVP {
+  width: 100%;
+  max-width: 400px; /* Restrict RSVP button width */
+}

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import SpinCard from "@components/SpinCard";
 import TitleCard from "@components/TitleCard";
+import RSVPButton from "@/components/RSVPButton";
 export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
@@ -28,6 +29,9 @@ const Invite: React.FC = () => {
             </>
           }
         />
+      </div>
+      <div className="RSVP">
+        <RSVPButton />
       </div>
     </div>
   );
