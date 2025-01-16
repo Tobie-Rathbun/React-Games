@@ -1,5 +1,7 @@
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("./rsvp.db");
+const path = require("path");
+const dbPath = path.resolve(__dirname, "data", "rsvp.db");
+const db = new sqlite3.Database(dbPath);
 
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
