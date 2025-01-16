@@ -6,7 +6,7 @@ exports.handler = async (event) => {
   const dbPath = path.join(process.env.LAMBDA_TASK_ROOT || __dirname, "data", "rsvp.db");
   console.log("Resolved database path:", dbPath);
 
-  const db = new sqlite3.Database(dbPath, (err) => {
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
       console.error("Failed to open database:", err);
     } else {
