@@ -1465,9 +1465,10 @@ span.emoji {
   }
 }
 
-@media (max-width: 490px) {
+@media (max-width: 510px) {
   .spinCard {
-    top: 20%;
+    top: 16%;
+    right: 12%;
   }
   
   .titleCard {
@@ -1524,5 +1525,17 @@ span.emoji {
   .RSVPList {
     top: 1%;
     left: 70%;
+  }
+}
+
+@media (max-width: 510px) {
+  .RSVPButton {
+    top: 1%;
+    left: 2.2%;
+  }
+
+  .RSVPList {
+    top: 15%;
+    left: 2.2%;
   }
 }
