@@ -211,7 +211,7 @@ const SpinCard = ({
       "camera",
       Math.PI / 2,
       Math.PI / 3,
-      5,
+      6,
       BABYLON.Vector3.Zero(),
       sceneInstance
     );
