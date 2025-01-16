@@ -50,7 +50,7 @@ const RSVPButton = () => {
   return (
     <div
       style={{
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "var(--highlight-color-dark)",
         padding: "1em",
         borderRadius: "8px",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -83,13 +83,15 @@ const RSVPButton = () => {
             padding: "0.5em",
             border: "1px solid #ddd",
             borderRadius: "4px",
+            color:"var(--secondary-text-color)",
+            backgroundColor: "var(--dark-background)",
           }}
         />
         <button
           onClick={handleRSVP}
           style={{
             padding: "0.5em 1em",
-            backgroundColor: "#007BFF",
+            backgroundColor: "var(--dark-background)",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
