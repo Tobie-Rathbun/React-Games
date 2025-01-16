@@ -1,10 +1,5 @@
-const faunadb = require("faunadb");
-
-// Initialize FaunaDB client
-const q = faunadb.query;
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SECRET, // Use environment variable for security
-});
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
 exports.handler = async (event) => {
   // Resolve the database path, ensuring compatibility with Netlify Functions
@@ -30,7 +25,6 @@ exports.handler = async (event) => {
   };
 
   if (event.httpMethod === "OPTIONS") {
-    // Handle CORS preflight request
     return {
       statusCode: 200,
       headers: {
@@ -41,7 +35,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // GET handler: Fetch RSVP list
   if (event.httpMethod === "GET") {
     return new Promise((resolve) => {
       db.all("SELECT name FROM rsvp", (err, rows) => {
@@ -136,7 +129,7 @@ exports.handler = async (event) => {
     });
   }
 
-  // Method not allowed
+  closeDb(); // Close the database connection for unsupported methods
   return {
     statusCode: 405,
     headers: { "Access-Control-Allow-Origin": "*" },
