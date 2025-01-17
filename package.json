@@ -1,6 +1,6 @@
 {
   "name": "projects-site",
-  "version": "0.1.04.0000",
+  "version": "0.1.04.0003",
   "private": true,
   "scripts": {
     "dev": "next dev",
