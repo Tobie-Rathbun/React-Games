@@ -1,11 +1,36 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
+const fs = require("fs");
 
 exports.handler = async (event) => {
   // Resolve the database path, ensuring compatibility with Netlify Functions
   const dbPath = path.join(process.env.LAMBDA_TASK_ROOT || __dirname, "data", "rsvp.db");
   console.log("Resolved database path:", dbPath);
 
+  // Check if the database file exists
+  if (!fs.existsSync(dbPath)) {
+    console.error("Database file not found:", dbPath);
+    return {
+      statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: "Database file not found" }),
+    };
+  }
+
+  // Set read/write permissions on the database file
+  try {
+    fs.chmodSync(dbPath, 0o666); // Ensure read and write permissions
+    console.log("Database permissions set to read/write.");
+  } catch (err) {
+    console.error("Error setting database permissions:", err);
+    return {
+      statusCode: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: "Failed to set database permissions" }),
+    };
+  }
+
+  // Open the database
   const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
       console.error("Failed to open database:", err);
@@ -14,6 +39,7 @@ exports.handler = async (event) => {
     }
   });
 
+  // Function to close the database connection
   const closeDb = () => {
     db.close((err) => {
       if (err) {
