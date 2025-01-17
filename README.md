@@ -1,4 +1,4 @@
-# 🐸 Tobie Rathbun's Portfolio Website
+# 🐸 Tobie Rathbun's Projects Website
 
 Welcome to my **React + Next.js + Babylon.js** games website! This is a showcase of my process towards building the 3D title Poker Frogs
 
