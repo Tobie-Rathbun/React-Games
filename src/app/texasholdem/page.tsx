@@ -388,6 +388,14 @@ const TexasHoldEm: React.FC = () => {
       return;
     }
 
+    if (bettingRound >= 4) { // Adjust 4 to your max betting rounds
+      console.log("Final betting round reached, determining winner...");
+      const winner = determineWinner(activePlayers);
+      endGame(winner);
+      isBettingRoundProcessing.current = false;
+      return;
+    }
+
     if (bettingRound === 1) {
       revealCommunityCards(1); // Flop: Reveal 3 cards
     } else if (bettingRound === 2) {
