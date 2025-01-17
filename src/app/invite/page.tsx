@@ -18,7 +18,7 @@ const Invite: React.FC = () => {
       <div className="titleCard">
         <TitleCard
           header="Poker Night"
-          subheader="7 p.m. on Friday at Tobie's"
+          subheader="Tonight, 7 p.m. at Tobie's"
           bio={
             <>
               $10 buy-ins, additional chips available.
