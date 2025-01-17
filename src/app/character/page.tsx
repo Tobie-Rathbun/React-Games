@@ -11,6 +11,7 @@ interface CharacterData {
   height: string;
   weight: string;
   characterPoints: number;
+  fatType: string | null; // Store fat type
 }
 
 const StatPage: React.FC = () => {
@@ -21,6 +22,7 @@ const StatPage: React.FC = () => {
     height: "",
     weight: "",
     characterPoints: 100, // Initial character points
+    fatType: null, // Initially no fat type selected
   });
 
   // Memoize handleStatSave to prevent unnecessary re-renders
@@ -28,8 +30,16 @@ const StatPage: React.FC = () => {
     (stats: { ST: number; DX: number; IQ: number; HT: number }, remainingPoints: number) => {
       setCharacterData((prev) => ({ ...prev, stats, characterPoints: remainingPoints }));
     },
-    [] // No dependencies ensure it's stable
+    [] // Memoized to prevent re-renders
   );
+
+  const handleFatOptionChange = (fatType: string | null, points: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      fatType: fatType,
+      characterPoints: prev.characterPoints + points, // Add/subtract points based on fat type
+    }));
+  };
 
   const steps = [
     {
@@ -58,6 +68,8 @@ const StatPage: React.FC = () => {
           onHeightChange={(height, weight) =>
             setCharacterData((prev) => ({ ...prev, height, weight }))
           }
+          onFatOptionChange={handleFatOptionChange} // Pass fat option handler
+          fatType={characterData.fatType} // Pass the selected fat type
         />
       ),
       isValid: () => characterData.height.trim().length > 0,

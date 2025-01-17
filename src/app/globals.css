@@ -1596,7 +1596,7 @@ span.emoji {
   align-items: center; /* Center contents horizontally */
   justify-content: center; /* Center contents vertically */
   position: fixed; /* Stay within the viewport and allow scrolling if needed */
-  top: 60%;
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%); /* Adjust for exact center alignment */
   background-color: var(--chord-element-border); /* Rounded container background */

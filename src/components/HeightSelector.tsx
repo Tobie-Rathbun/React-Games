@@ -5,6 +5,8 @@ import React, { useState } from "react";
 interface HeightSelectorProps {
   ST: number; // Strength value from the selected stats
   onHeightChange: (height: string, weight: string) => void;
+  onFatOptionChange: (fatType: string | null, points: number) => void; // Callback to update fat type and points
+  fatType: string | null; // Track selected fat type
 }
 
 const heightWeightMap = [
@@ -24,17 +26,39 @@ const heightWeightMap = [
   { ST: 17, height: "6’3” or more", weight: "190 lbs." },
 ];
 
-const HeightSelector: React.FC<HeightSelectorProps> = ({ ST, onHeightChange }) => {
+const fatOptions = [
+  { label: "Overweight (-5 points)", points: -5 },
+  { label: "Fat (-10 points)", points: -10 },
+  { label: "Extremely Fat (-20 points)", points: -20 },
+];
+
+const HeightSelector: React.FC<HeightSelectorProps> = ({
+  ST,
+  onHeightChange,
+  onFatOptionChange,
+  fatType,
+}) => {
   const [selectedHeight, setSelectedHeight] = useState<string | null>(null);
   const [calculatedWeight, setCalculatedWeight] = useState<string | null>(null);
 
   // Filter available heights based on ST
   const availableOptions = heightWeightMap.filter((entry) => entry.ST <= ST);
 
-  const handleSelect = (height: string, weight: string) => {
+  const handleSelectHeight = (height: string, weight: string) => {
     setSelectedHeight(height);
     setCalculatedWeight(weight);
     onHeightChange(height, weight);
+  };
+
+  const handleSelectFat = (fatLabel: string, points: number) => {
+    const absolutePoints = Math.abs(points); // Convert points to absolute value
+    if (fatType === fatLabel) {
+      // Deselect if the same fat type is selected again (reverse the operation)
+      onFatOptionChange(null, -absolutePoints); // Subtract the previously added points
+    } else {
+      // Select a new fat type, add the absolute points
+      onFatOptionChange(fatLabel, absolutePoints); // Add points for the new fat type
+    }
   };
 
   return (
@@ -44,7 +68,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ ST, onHeightChange }) =
         {availableOptions.map((option, index) => (
           <li key={index}>
             <button
-              onClick={() => handleSelect(option.height, option.weight)}
+              onClick={() => handleSelectHeight(option.height, option.weight)}
               className={selectedHeight === option.height ? "selected" : ""}
             >
               {option.height}
@@ -62,6 +86,20 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({ ST, onHeightChange }) =
           </p>
         </div>
       )}
+
+      <h2>Choose your body type</h2>
+      <ul>
+        {fatOptions.map((option, index) => (
+          <li key={index}>
+            <button
+              onClick={() => handleSelectFat(option.label, option.points)}
+              className={fatType === option.label ? "selected" : ""}
+            >
+              {option.label}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
