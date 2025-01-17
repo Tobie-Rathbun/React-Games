@@ -357,9 +357,29 @@ const TexasHoldEm: React.FC = () => {
   }
 
   function nextTurn() {
+    if (gameOverRef.current || gameOver) {
+      console.log("Game is over, skipping nextTurn.");
+      return;
+    }
+  
     const activePlayers = players.filter((player) => player.active);
+
+    if (
+      (areAllBetsEqual() && activePlayers.length > 1) &&
+      bettingRound >= 4
+    ) {
+      if (areAllBetsEqual() && activePlayers.length > 1) {
+        console.log("All bets are equal, ending the betting round...");
+        endBettingRound();
+      } else {
+        console.log("Game is about to end, skipping nextTurn.");
+      }
+      return;
+    }
+    
+
     activePlayers.forEach((player) => {
-        console.log(`${player.name} is still in the game.`);
+      console.log(`${player.name} is still in the game.`);
     });
   
     checkWin();
@@ -367,7 +387,7 @@ const TexasHoldEm: React.FC = () => {
     // Find the next active player
     const nextIndex = getNextActivePlayer(currentPlayerIndex);
     setCurrentPlayerIndex(nextIndex);
-  }
+  }  
 
   function endBettingRound() {
     if (isBettingRoundProcessing.current) {
@@ -384,6 +404,7 @@ const TexasHoldEm: React.FC = () => {
     if (activePlayers.length === 1) {
       console.log("Only one player left during betting round, ending the game...");
       handleGameOver();
+      setCurrentPlayerIndex(-1);
       isBettingRoundProcessing.current = false;
       return;
     }
@@ -392,6 +413,7 @@ const TexasHoldEm: React.FC = () => {
       console.log("Final betting round reached, determining winner...");
       const winner = determineWinner(activePlayers);
       endGame(winner);
+      setCurrentPlayerIndex(-1);
       isBettingRoundProcessing.current = false;
       return;
     }
@@ -587,8 +609,11 @@ const TexasHoldEm: React.FC = () => {
     <span>Round: {bettingRound}</span>
     <span>Game: {gameRound}</span>
     <span>
-        Current Turn: {currentPlayerIndex >= 0 ? players[currentPlayerIndex]?.name : "Nobody"}
+      Current Turn: {currentPlayerIndex !== -1 && currentPlayerIndex >= 0
+        ? players[currentPlayerIndex]?.name
+        : "Nobody"}
     </span>
+
   </div>
 
   {/* Community Cards */}
@@ -649,7 +674,7 @@ const TexasHoldEm: React.FC = () => {
       <div
       key={player.name}
       className={`player-box ${player.lastAction === "Fold" ? "player-folded" : ""} ${
-        index === currentPlayerIndex ? "player-current" : ""
+        currentPlayerIndex === index && currentPlayerIndex !== -1 ? "player-current" : ""
       }`}
     >
     
