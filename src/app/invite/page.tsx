@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import SpinCard from "@components/SpinCard";
 import TitleCard from "@components/TitleCard";
 import RSVPButton from "@/components/RSVPButton";
-import RSVPList from "@/components/RSVPList";
+// import RSVPList from "@/components/RSVPList";
 export const dynamic = "force-dynamic";
 
 const Invite: React.FC = () => {
