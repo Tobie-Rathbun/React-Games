@@ -1532,3 +1532,60 @@ span.emoji {
     top: 52%;  
   }
 }
+
+
+
+
+/* RPG Stats */
+.stat-container {
+  background-color: var(--chord-element-border);
+  width: 20%; /* Container width */
+  border-radius: 15px; /* Smoothly round the edges */
+  padding: 20px; /* Add padding for spacing */
+  margin: auto; /* Centers horizontally */
+  position: fixed; /* Keeps the container within the viewport */
+  top: 50%; /* Position vertically relative to the viewport */
+  left: 66%; /* Position horizontally relative to the viewport */
+  transform: translate(-50%, -40%); /* Adjust to move it slightly downward */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for better visuals */
+  overflow: auto; /* Prevent content from being cut off */
+}
+
+.stat {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
+  gap: 10px; /* Space between items */
+}
+
+.stat-info {
+  text-align: center;
+  min-width: 50px; /* Ensure consistent width for numbers */
+  font-size: 1rem;
+}
+
+.stat-info h2 {
+  color: var(--highlight-color); /* Change text color of h2 */
+  margin: 0; /* Remove default margins */
+}
+
+.arrow {
+  background-color: var(--highlight-color);
+  color: var(--text-color);
+  border: none;
+  padding: 10px 15px;
+  font-size: 1.5rem;
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.arrow:hover {
+  background-color: var(--accent-color);
+}
+
+.level-selector h1 {
+  position: fixed;
+  top: 50%;
+  left: 15%;
+}

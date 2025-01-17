@@ -6,7 +6,7 @@ import RSVPButton from "@/components/RSVPButton";
 // import RSVPList from "@/components/RSVPList";
 export const dynamic = "force-dynamic";
 
-const Invite: React.FC = () => {
+const PokerInvite: React.FC = () => {
   const [relModifier] = useState(0.75);
   const [rsvpList, setRsvpList] = useState<string[]>([]); // Shared state for RSVP list
 
@@ -40,4 +40,4 @@ const Invite: React.FC = () => {
   );
 };
 
-export default Invite;
+export default PokerInvite;
