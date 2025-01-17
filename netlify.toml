@@ -5,12 +5,16 @@
 
 [functions]
   included_files = ["netlify/functions/data/rsvp.db"]
+  external_node_modules = ["sqlite3"]
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[redirects]]
   from = "/api/*" # Redirect API requests to serverless functions
   to = "/.netlify/functions/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
