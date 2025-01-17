@@ -1519,7 +1519,7 @@ span.emoji {
 
 @media (max-width: 510px) {
   .RSVPButton {
-    top: 68%;
+    top: 75%;
     left: 14%;
   }
   
@@ -1529,6 +1529,6 @@ span.emoji {
   }
   
   .titleCard {
-    top: 50%;  
+    top: 52%;  
   }
 }

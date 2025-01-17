@@ -3,6 +3,8 @@ import type { Configuration as WebpackConfig } from 'webpack';
 import path from 'path';
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: true, // Enable source maps in production
+  
   webpack: (config: WebpackConfig) => {
     if (config.resolve) {
       config.resolve.alias = {
