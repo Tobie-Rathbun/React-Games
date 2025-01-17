@@ -1,56 +1,11 @@
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
-const fs = require("fs");
+const db = require("./db");
 
 exports.handler = async (event) => {
-  // Resolve the database path, ensuring compatibility with Netlify Functions
-  const dbPath = path.join(process.env.LAMBDA_TASK_ROOT || __dirname, "data", "rsvp.db");
-  console.log("Resolved database path:", dbPath);
+  console.log("Event received:", event.httpMethod);
 
-  // Check if the database file exists
-  if (!fs.existsSync(dbPath)) {
-    console.error("Database file not found:", dbPath);
-    return {
-      statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: "Database file not found" }),
-    };
-  }
-
-  // Set read/write permissions on the database file
-  try {
-    fs.chmodSync(dbPath, 0o666); // Ensure read and write permissions
-    console.log("Database permissions set to read/write.");
-  } catch (err) {
-    console.error("Error setting database permissions:", err);
-    return {
-      statusCode: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({ error: "Failed to set database permissions" }),
-    };
-  }
-
-  // Open the database
-  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-      console.error("Failed to open database:", err);
-    } else {
-      console.log("Database connected successfully.");
-    }
-  });
-
-  // Function to close the database connection
-  const closeDb = () => {
-    db.close((err) => {
-      if (err) {
-        console.error("Error closing the database:", err);
-      } else {
-        console.log("Database connection closed successfully.");
-      }
-    });
-  };
-
+  // Handle CORS preflight requests
   if (event.httpMethod === "OPTIONS") {
+    console.log("Handling CORS preflight request");
     return {
       statusCode: 200,
       headers: {
@@ -62,103 +17,118 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod === "GET") {
-    return new Promise((resolve) => {
-      db.all("SELECT name FROM rsvp", (err, rows) => {
-        closeDb(); // Close the database connection
-        if (err) {
-          console.error("Error fetching RSVPs:", err);
-          resolve({
-            statusCode: 500,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
-          });
-        } else {
-          resolve({
-            statusCode: 200,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({
-              spotsLeft: 3 - rows.length,
-              rsvpList: rows.map((row) => row.name),
-            }),
-          });
-        }
-      });
-    });
+    try {
+      console.log("Fetching RSVP list from database");
+      const { rows } = await db.query("SELECT name FROM rsvp");
+      const spotsLeft = Math.max(0, 3 - rows.length);
+
+      console.log("RSVP list fetched successfully:", rows);
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          rsvpList: rows.map((row) => row.name),
+          spotsLeft,
+        }),
+      };
+    } catch (error) {
+      console.error("Error fetching RSVPs:", error.message, error.stack);
+      return {
+        statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ error: "Failed to fetch RSVPs" }),
+      };
+    }
   }
 
   if (event.httpMethod === "POST") {
-    const { name } = JSON.parse(event.body);
+    try {
+      const { name } = JSON.parse(event.body);
+      console.log("Adding RSVP:", name);
 
-    return new Promise((resolve) => {
-      db.all("SELECT COUNT(*) as count FROM rsvp", (err, rows) => {
-        if (err) {
-          console.error("Error counting RSVPs:", err);
-          closeDb(); // Close the database connection
-          resolve({
-            statusCode: 500,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({ error: "Failed to RSVP" }),
-          });
-          return;
-        }
+      // Validate name input
+      if (!name || typeof name !== "string" || name.trim() === "") {
+        console.error("Invalid name provided:", name);
+        return {
+          statusCode: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({ error: "Invalid name provided" }),
+        };
+      }
 
-        const spotsLeft = 3 - rows[0].count;
-        if (spotsLeft <= 0) {
-          closeDb(); // Close the database connection
-          resolve({
-            statusCode: 400,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({ error: "No spots left" }),
-          });
-        } else {
-          db.run("INSERT INTO rsvp (name) VALUES (?)", [name], (err) => {
-            closeDb(); // Close the database connection
-            if (err) {
-              console.error("Error inserting RSVP:", err);
-              resolve({
-                statusCode: 500,
-                headers: { "Access-Control-Allow-Origin": "*" },
-                body: JSON.stringify({ error: "Failed to RSVP" }),
-              });
-            } else {
-              resolve({
-                statusCode: 200,
-                headers: { "Access-Control-Allow-Origin": "*" },
-                body: JSON.stringify({ message: "RSVP successful" }),
-              });
-            }
-          });
-        }
-      });
-    });
+      const { rows } = await db.query("SELECT COUNT(*) AS count FROM rsvp");
+      const spotsLeft = 3 - parseInt(rows[0].count, 10);
+
+      console.log("Spots left:", spotsLeft);
+      if (spotsLeft <= 0) {
+        return {
+          statusCode: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({ error: "No spots left" }),
+        };
+      }
+
+      await db.query("INSERT INTO rsvp (name) VALUES ($1)", [name.trim()]);
+      console.log("RSVP added successfully:", name);
+
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ message: "RSVP successful" }),
+      };
+    } catch (error) {
+      console.error("Error adding RSVP:", error.message, error.stack);
+      return {
+        statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ error: "Failed to RSVP" }),
+      };
+    }
   }
 
   if (event.httpMethod === "DELETE") {
-    return new Promise((resolve) => {
-      db.run("DELETE FROM rsvp", (err) => {
-        closeDb(); // Close the database connection
-        if (err) {
-          console.error("Error clearing RSVP list:", err);
-          resolve({
-            statusCode: 500,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({ error: "Failed to clear RSVPs" }),
-          });
-        } else {
-          resolve({
-            statusCode: 200,
-            headers: { "Access-Control-Allow-Origin": "*" },
-            body: JSON.stringify({ message: "RSVP list cleared" }),
-          });
-        }
-      });
-    });
+    try {
+      console.log("Clearing all RSVPs");
+      await db.query("DELETE FROM rsvp");
+      console.log("RSVP list cleared successfully");
+
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ message: "RSVP list cleared" }),
+      };
+    } catch (error) {
+      console.error("Error clearing RSVPs:", error.message, error.stack);
+      return {
+        statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ error: "Failed to clear RSVPs" }),
+      };
+    }
   }
 
-  closeDb(); // Close the database connection for unsupported methods
+  console.error("Unsupported HTTP method:", event.httpMethod);
   return {
     statusCode: 405,
-    headers: { "Access-Control-Allow-Origin": "*" },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
     body: "Method Not Allowed",
   };
 };
