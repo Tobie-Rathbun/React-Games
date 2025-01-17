@@ -60,6 +60,12 @@ const TexasHoldEm: React.FC = () => {
     return deck.sort(() => Math.random() - 0.5);
   }
 
+  // Logs
+  function logActivePlayers() {
+    const activePlayers = players.filter((player) => player.active);
+    console.log("Active players:", activePlayers.map((p) => p.name).join(", "));
+  }
+  
 
   // Win Likelihood Percentage
   function simulateWinLikelihood(
@@ -146,17 +152,8 @@ const TexasHoldEm: React.FC = () => {
     // Add the player to the list of those who have acted
     setPlayersWhoActed((prev) => [...new Set([...prev, currentPlayerIndex])]);
 
-    const activePlayers = players.filter((player) => player.active);
-    activePlayers.forEach((player) => {
-        console.log(`${player.name} is still in the game.`);
-    });
-
-    if (activePlayers.length === 1) {
-      console.log("Only one player left during betting round, ending the game...");
-      endGame(activePlayers[0]); // End game if only one player is left
-      return;
-    }
-
+    logActivePlayers();
+    handleGameOver();
     nextTurn();
   }
 
@@ -240,9 +237,10 @@ const TexasHoldEm: React.FC = () => {
 
   // Gameplay Logic
   function nextGame() {
+    gameOverRef.current = false;
+    setGameOver(false);
     setPlayersWhoActed([]); // Reset at the start of a new game
     setLastValidBet(0);
-    setGameOver(false);
     setGameStarted(true);
     setCommunityCards(["", "", "", "", ""]); // Reset community cards
     setPot(0);
@@ -384,7 +382,7 @@ const TexasHoldEm: React.FC = () => {
 
     if (activePlayers.length === 1) {
       console.log("Only one player left during betting round, ending the game...");
-      endGame(activePlayers[0]); // End game if only one player is left
+      handleGameOver();
       isBettingRoundProcessing.current = false;
       return;
     }
@@ -396,12 +394,7 @@ const TexasHoldEm: React.FC = () => {
     } else if (bettingRound === 3) {
       revealCommunityCards(3); // River: Reveal 1 card
     } else {
-      const activePlayers = players.filter((player) => player.active);
-      activePlayers.forEach((player) => {
-          console.log(`${player.name} is still in the game.`);
-      });
-      const winner = determineWinner(activePlayers);
-      endGame(winner); // Call endGame with the determined winner
+      handleGameOver();
     }
   
     
@@ -458,10 +451,15 @@ const TexasHoldEm: React.FC = () => {
   }
   
   function endGame(winningPlayer?: Player) {
-    
+    console.log("endGame called with winner:", winningPlayer?.name);
   
-    if (gameOverRef.current) return; // Prevent duplicate execution
+    if (gameOverRef.current) {
+      console.log("Game already ended, exiting endGame.");
+      return;
+    }
+
     gameOverRef.current = true;
+    setGameOver(true);
 
     let winner: Player | undefined = winningPlayer;
 
@@ -487,6 +485,15 @@ const TexasHoldEm: React.FC = () => {
     
     setCurrentPlayerIndex(-1); // Use -1 to indicate no active turn
   }
+
+  function handleGameOver() {
+    const activePlayers = players.filter((player) => player.active);
+    if (activePlayers.length === 1) {
+      console.log("Only one player left, ending the game...");
+      endGame(activePlayers[0]);
+    }
+  }
+  
   
   
   // AI Logic
