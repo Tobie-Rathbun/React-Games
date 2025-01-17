@@ -46,6 +46,7 @@ const TexasHoldEm: React.FC = () => {
   const isUserTurn = players[currentPlayerIndex]?.name === "You";
   const [playersWhoActed, setPlayersWhoActed] = useState<number[]>([]);
   const [lastValidBet, setLastValidBet] = useState<number>(0);
+  const lastValidBetRef = useRef(lastValidBet);
   const aiTurnTimer = 1000;
   const Hand = useRef<{ solve: (cards: string[]) => { rank: number } } | null>(null);
   function generateDeck(): string[] {
@@ -356,9 +357,29 @@ const TexasHoldEm: React.FC = () => {
   }
 
   function nextTurn() {
+    if (gameOverRef.current || gameOver) {
+      console.log("Game is over, skipping nextTurn.");
+      return;
+    }
+  
     const activePlayers = players.filter((player) => player.active);
+
+    if (
+      (areAllBetsEqual() && activePlayers.length > 1) &&
+      bettingRound >= 4
+    ) {
+      if (areAllBetsEqual() && activePlayers.length > 1) {
+        console.log("All bets are equal, ending the betting round...");
+        endBettingRound();
+      } else {
+        console.log("Game is about to end, skipping nextTurn.");
+      }
+      return;
+    }
+    
+
     activePlayers.forEach((player) => {
-        console.log(`${player.name} is still in the game.`);
+      console.log(`${player.name} is still in the game.`);
     });
   
     checkWin();
@@ -366,7 +387,7 @@ const TexasHoldEm: React.FC = () => {
     // Find the next active player
     const nextIndex = getNextActivePlayer(currentPlayerIndex);
     setCurrentPlayerIndex(nextIndex);
-  }
+  }  
 
   function endBettingRound() {
     if (isBettingRoundProcessing.current) {
@@ -383,6 +404,16 @@ const TexasHoldEm: React.FC = () => {
     if (activePlayers.length === 1) {
       console.log("Only one player left during betting round, ending the game...");
       handleGameOver();
+      setCurrentPlayerIndex(-1);
+      isBettingRoundProcessing.current = false;
+      return;
+    }
+
+    if (bettingRound >= 4) { // Adjust 4 to your max betting rounds
+      console.log("Final betting round reached, determining winner...");
+      const winner = determineWinner(activePlayers);
+      endGame(winner);
+      setCurrentPlayerIndex(-1);
       isBettingRoundProcessing.current = false;
       return;
     }
@@ -507,7 +538,7 @@ const TexasHoldEm: React.FC = () => {
     const maxBet = Math.max(...players.map((player) => player.totalBet));
     const decision = Math.random();
 
-    if (decision < 0.3) {
+    if (decision < 0.15) {
       fold();
   } else if (decision < 0.7) {
       call();
@@ -515,14 +546,14 @@ const TexasHoldEm: React.FC = () => {
       let raiseAmount = maxBet + SMALL_BLIND; // Default raise amount
 
       // Ensure raiseAmount is valid
-      if (raiseAmount <= lastValidBet) {
-          raiseAmount = lastValidBet + SMALL_BLIND; // Minimum valid raise
+      if (raiseAmount <= lastValidBetRef.current) {
+          raiseAmount = lastValidBetRef.current + SMALL_BLIND; // Minimum valid raise
       }
 
       // Cap raiseAmount to AI's chips
       raiseAmount = Math.min(raiseAmount, currentPlayer.chips);
 
-      if (raiseAmount > currentPlayer.chips) {
+      if (raiseAmount > lastValidBetRef.current && raiseAmount <= currentPlayer.chips) {
           // If AI cannot make a valid raise, it should call or fold
           call();
       } else {
@@ -540,6 +571,10 @@ const TexasHoldEm: React.FC = () => {
       console.log("Hand loaded:", Hand.current);
     });
   }, []);
+
+  useEffect(() => {
+    lastValidBetRef.current = lastValidBet;
+  }, [lastValidBet]);  
 
   useEffect(() => {
     console.log("Betting round updated:", bettingRound);
@@ -574,8 +609,11 @@ const TexasHoldEm: React.FC = () => {
     <span>Round: {bettingRound}</span>
     <span>Game: {gameRound}</span>
     <span>
-        Current Turn: {currentPlayerIndex >= 0 ? players[currentPlayerIndex]?.name : "Nobody"}
+      Current Turn: {currentPlayerIndex !== -1 && currentPlayerIndex >= 0
+        ? players[currentPlayerIndex]?.name
+        : "Nobody"}
     </span>
+
   </div>
 
   {/* Community Cards */}
@@ -636,7 +674,7 @@ const TexasHoldEm: React.FC = () => {
       <div
       key={player.name}
       className={`player-box ${player.lastAction === "Fold" ? "player-folded" : ""} ${
-        index === currentPlayerIndex ? "player-current" : ""
+        currentPlayerIndex === index && currentPlayerIndex !== -1 ? "player-current" : ""
       }`}
     >
     
