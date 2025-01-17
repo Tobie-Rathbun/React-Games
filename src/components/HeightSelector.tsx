@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface HeightSelectorProps {
   ST: number; // Strength value from the selected stats
@@ -10,28 +10,28 @@ interface HeightSelectorProps {
 }
 
 const heightWeightMap = [
-  { ST: 5, height: "5’2” or less", weight: "120 lbs." },
-  { ST: 5, height: "5’3”", weight: "130 lbs." },
-  { ST: 6, height: "5’4”", weight: "130 lbs." },
-  { ST: 7, height: "5’5”", weight: "135 lbs." },
-  { ST: 8, height: "5’6”", weight: "135 lbs." },
-  { ST: 9, height: "5’7”", weight: "140 lbs." },
-  { ST: 10, height: "5’8”", weight: "145 lbs." },
-  { ST: 11, height: "5’9”", weight: "150 lbs." },
-  { ST: 12, height: "5’10”", weight: "155 lbs." },
-  { ST: 13, height: "5’11”", weight: "160 lbs." },
-  { ST: 14, height: "6’", weight: "165 lbs." },
-  { ST: 15, height: "6’1”", weight: "170 lbs." },
-  { ST: 16, height: "6’2”", weight: "180 lbs." },
-  { ST: 17, height: "6’3” or more", weight: "190 lbs." },
+  { ST: 5, height: "5’2” or less", weight: 120 },
+  { ST: 5, height: "5’3”", weight: 130 },
+  { ST: 6, height: "5’4”", weight: 130 },
+  { ST: 7, height: "5’5”", weight: 135 },
+  { ST: 8, height: "5’6”", weight: 135 },
+  { ST: 9, height: "5’7”", weight: 140 },
+  { ST: 10, height: "5’8”", weight: 145 },
+  { ST: 11, height: "5’9”", weight: 150 },
+  { ST: 12, height: "5’10”", weight: 155 },
+  { ST: 13, height: "5’11”", weight: 160 },
+  { ST: 14, height: "6’", weight: 165 },
+  { ST: 15, height: "6’1”", weight: 170 },
+  { ST: 16, height: "6’2”", weight: 180 },
+  { ST: 17, height: "6’3” or more", weight: 190 },
 ];
 
 const fatOptions = [
-  { label: "Skinny (5 points)", points: -5 },
-  { label: "Average (0 points)", points: 0 },
-  { label: "Overweight (-5 points)", points: 5 },
-  { label: "Fat (-10 points)", points: 10 },
-  { label: "Extremely Fat (-20 points)", points: 20 },
+  { label: "Skinny (5 points)", points: -5, weightModifier: 0.9 }, // 10% reduction
+  { label: "Average (0 points)", points: 0, weightModifier: 1 }, // No change
+  { label: "Overweight (-5 points)", points: 5, weightModifier: 1.1 }, // 10% increase
+  { label: "Fat (-10 points)", points: 10, weightModifier: 1.2 }, // 20% increase
+  { label: "Extremely Fat (-20 points)", points: 20, weightModifier: 1.5 }, // 50% increase
 ];
 
 const HeightSelector: React.FC<HeightSelectorProps> = ({
@@ -41,26 +41,37 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   fatType,
 }) => {
   const [selectedHeight, setSelectedHeight] = useState<string | null>(null);
+  const [baseWeight, setBaseWeight] = useState<number | null>(null);
   const [calculatedWeight, setCalculatedWeight] = useState<string | null>(null);
 
   // Filter available heights based on ST
   const availableOptions = heightWeightMap.filter((entry) => entry.ST <= ST);
 
-  const handleSelectHeight = (height: string, weight: string) => {
+  const handleSelectHeight = (height: string, weight: number) => {
     setSelectedHeight(height);
-    setCalculatedWeight(weight);
-    onHeightChange(height, weight);
+    setBaseWeight(weight); // Store base weight
+    setCalculatedWeight(`${weight} lbs.`); // Default calculated weight is the base weight
+    onHeightChange(height, `${weight} lbs.`); // Pass base weight to parent
   };
 
   const handleSelectFat = (fatLabel: string, points: number) => {
     if (fatType === fatLabel) {
-      // Deselect if the same fat type is selected again (reverse the operation)
-      onFatOptionChange(null, -points); // Subtract the previously added points
+      // Deselect if the same fat type is selected again
+      onFatOptionChange(null, -points); // Reverse the operation
     } else {
-      // Select a new fat type, add points directly
-      onFatOptionChange(fatLabel, points); // Add points for the new fat type
+      // Select a new fat type
+      onFatOptionChange(fatLabel, points);
     }
   };
+
+  // Calculate weight dynamically based on selected fat type
+  useEffect(() => {
+    if (baseWeight !== null) {
+      const selectedFatOption = fatOptions.find((option) => option.label === fatType);
+      const weightModifier = selectedFatOption ? selectedFatOption.weightModifier : 1;
+      setCalculatedWeight(`${Math.round(baseWeight * weightModifier)} lbs.`); // Apply modifier to base weight
+    }
+  }, [baseWeight, fatType]); // Recalculate when base weight or fat type changes
 
   return (
     <div className="height-selector">
@@ -83,7 +94,8 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
             <strong>Selected Height:</strong> {selectedHeight}
           </p>
           <p>
-            <strong>Calculated Weight:</strong> {calculatedWeight}
+            <strong>Calculated Weight:</strong>{" "}
+            {calculatedWeight !== null ? calculatedWeight : "—"}
           </p>
         </div>
       )}
