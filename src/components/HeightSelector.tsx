@@ -27,9 +27,11 @@ const heightWeightMap = [
 ];
 
 const fatOptions = [
-  { label: "Overweight (-5 points)", points: -5 },
-  { label: "Fat (-10 points)", points: -10 },
-  { label: "Extremely Fat (-20 points)", points: -20 },
+  { label: "Skinny (5 points)", points: -5 },
+  { label: "Average (0 points)", points: 0 },
+  { label: "Overweight (-5 points)", points: 5 },
+  { label: "Fat (-10 points)", points: 10 },
+  { label: "Extremely Fat (-20 points)", points: 20 },
 ];
 
 const HeightSelector: React.FC<HeightSelectorProps> = ({
@@ -51,13 +53,12 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   };
 
   const handleSelectFat = (fatLabel: string, points: number) => {
-    const absolutePoints = Math.abs(points); // Convert points to absolute value
     if (fatType === fatLabel) {
       // Deselect if the same fat type is selected again (reverse the operation)
-      onFatOptionChange(null, -absolutePoints); // Subtract the previously added points
+      onFatOptionChange(null, -points); // Subtract the previously added points
     } else {
-      // Select a new fat type, add the absolute points
-      onFatOptionChange(fatLabel, absolutePoints); // Add points for the new fat type
+      // Select a new fat type, add points directly
+      onFatOptionChange(fatLabel, points); // Add points for the new fat type
     }
   };
 
