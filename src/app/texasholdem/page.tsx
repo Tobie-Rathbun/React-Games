@@ -48,7 +48,6 @@ const TexasHoldEm: React.FC = () => {
   const [lastValidBet, setLastValidBet] = useState<number>(0);
   const aiTurnTimer = 1000;
   const Hand = useRef<{ solve: (cards: string[]) => { rank: number } } | null>(null);
-  const isNextTurnProcessing = useRef(false);
   function generateDeck(): string[] {
     const suits = ["♠", "♥", "♦", "♣"];
     const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
