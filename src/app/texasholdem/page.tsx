@@ -46,6 +46,7 @@ const TexasHoldEm: React.FC = () => {
   const isUserTurn = players[currentPlayerIndex]?.name === "You";
   const [playersWhoActed, setPlayersWhoActed] = useState<number[]>([]);
   const [lastValidBet, setLastValidBet] = useState<number>(0);
+  const lastValidBetRef = useRef(lastValidBet);
   const aiTurnTimer = 1000;
   const Hand = useRef<{ solve: (cards: string[]) => { rank: number } } | null>(null);
   function generateDeck(): string[] {
@@ -515,14 +516,14 @@ const TexasHoldEm: React.FC = () => {
       let raiseAmount = maxBet + SMALL_BLIND; // Default raise amount
 
       // Ensure raiseAmount is valid
-      if (raiseAmount <= lastValidBet) {
-          raiseAmount = lastValidBet + SMALL_BLIND; // Minimum valid raise
+      if (raiseAmount <= lastValidBetRef.current) {
+          raiseAmount = lastValidBetRef.current + SMALL_BLIND; // Minimum valid raise
       }
 
       // Cap raiseAmount to AI's chips
       raiseAmount = Math.min(raiseAmount, currentPlayer.chips);
 
-      if (raiseAmount > currentPlayer.chips) {
+      if (raiseAmount > lastValidBetRef.current && raiseAmount <= currentPlayer.chips) {
           // If AI cannot make a valid raise, it should call or fold
           call();
       } else {
@@ -540,6 +541,10 @@ const TexasHoldEm: React.FC = () => {
       console.log("Hand loaded:", Hand.current);
     });
   }, []);
+
+  useEffect(() => {
+    lastValidBetRef.current = lastValidBet;
+  }, [lastValidBet]);  
 
   useEffect(() => {
     console.log("Betting round updated:", bettingRound);
