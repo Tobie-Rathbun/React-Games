@@ -5,7 +5,7 @@
 
 [functions]
   included_files = ["netlify/functions/data/rsvp.db"]
-  external_node_modules = ["sqlite3", "@babylonjs/core", "@babylonjs/loaders"]
+  external_node_modules = ["sqlite3", "@babylonjs/core", "@babylonjs/loaders", "pg"]
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
