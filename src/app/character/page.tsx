@@ -72,7 +72,7 @@ const StatPage: React.FC = () => {
           fatType={characterData.fatType} // Pass the selected fat type
         />
       ),
-      isValid: () => characterData.height.trim().length > 0,
+      isValid: () => characterData.height.trim().length > 0 && characterData.fatType !== null, // Require both height and fatType
     },
   ];
 
