@@ -1589,3 +1589,66 @@ span.emoji {
   top: 50%;
   left: 15%;
 }
+
+.height-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: fixed; /* Stay within the viewport and allow scrolling if needed */
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjust for exact center alignment */
+  background-color: var(--chord-element-border); /* Rounded container background */
+  padding: 30px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+}
+
+.height-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.height-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.height-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.height-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.height-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.height-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.points-text {
+  position: fixed;
+  left: 5%;
+  top: 35%;
+}
