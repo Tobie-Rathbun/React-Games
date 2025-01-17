@@ -4,7 +4,7 @@
   functions = "netlify/functions" # Directory for Netlify serverless functions
 
 [functions]
-  included_files = ["functions/data/rsvp.db"]
+  included_files = ["netlify/functions/data/rsvp.db"]
 
 
 [[redirects]]
