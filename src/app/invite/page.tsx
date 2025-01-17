@@ -21,6 +21,8 @@ const Invite: React.FC = () => {
           subheader="Tonight, 7 p.m. at Tobie's"
           bio={
             <>
+              Reservations only, RSVP below, limited availability.
+              <br />
               $10 buy-ins, additional chips available.
               <br />
               Rewards will be distributed at the end of the night.
@@ -33,10 +35,6 @@ const Invite: React.FC = () => {
       <div className="RSVPButton">
         {/* Pass shared state as props */}
         <RSVPButton rsvpList={rsvpList} setRsvpList={setRsvpList} />
-      </div>
-      <div className="RSVPList">
-        {/* Pass shared state as props */}
-        <RSVPList rsvpList={rsvpList} />
       </div>
     </div>
   );
