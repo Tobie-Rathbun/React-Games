@@ -863,16 +863,7 @@ button:active, input[type="text"]:active, input[type="password"]:active {
 
 
 
-/* Media Queries */
 
-/* @media (max-width: 768px) {
-  #container1 { top: 10px; left: 10px; }
-  #container2 { top: 120px; left: 10px; }
-  #container3 { top: 230px; left: 10px; }
-  #container4 { top: 340px; left: 10px; }
-  #container5 { top: 450px; left: 10px; }
-  #container6 { top: 560px; left: 10px; }
-} */
 
 
 
@@ -1403,16 +1394,72 @@ span.emoji {
   margin: 0;
 }
 
+
+/* RSVP */
+.RSVPButton {
+  position: absolute;
+  top: 70%;
+  left: 19%;
+}
+
+.RSVPList {
+  position: absolute;
+  top: 70%;
+  left: 40%;
+}
+
+@media (max-width: 2000px) {
+  .RSVPButton {
+    left: 22%;
+  }
+}
+
+@media (max-width: 1080px) {
+  .RSVPButton {
+    left: 15%;
+  }
+}
+
+@media (max-width: 940px) {
+  .RSVPButton {
+    left: 13%;
+  }
+
+  .RSVPList {
+    left: 43%;
+  }
+}
+
+@media (max-width: 835px) {
+  .RSVPButton {
+    left: 13%;
+  }
+
+  .RSVPList {
+    left: 50%;
+  }
+}
+
 @media (max-width: 768px) {
+  .RSVPButton {
+    top: 82%;
+    left: 30%;
+  }
+
+  .RSVPList {
+    top: 1%;
+    left: 70%;
+  }
+
   .titleCard {
-    top: 95%; 
+    top: 60%; 
     left: 50%; 
     width: 60%;
   }
 
   .spinCard {
     right: 24%;
-    top: 12%;;
+    top: -4%;;
   }
 
   .header {
@@ -1436,13 +1483,18 @@ span.emoji {
 }
 
 @media (max-width: 660px) {
+  .RSVPButton {
+    top: 75%;
+    left: 23%;
+  }
+
   .titleCard {
-    top: 80%;  
+    top: 55%;  
     width: 80%;
   }
 
   .spinCard {
-    top: 10%;
+    top: -3%;
   }
 
   .header {
@@ -1466,76 +1518,17 @@ span.emoji {
 }
 
 @media (max-width: 510px) {
+  .RSVPButton {
+    top: 68%;
+    left: 14%;
+  }
+  
   .spinCard {
-    top: 16%;
-    right: 12%;
+    top: 3%;
+    right: 25%;
   }
   
   .titleCard {
-    top: 75%;  
-  }
-}
-
-
-/* RSVP */
-.RSVPButton {
-  position: absolute;
-  top: 70%;
-  left: 10%;
-}
-
-.RSVPList {
-  position: absolute;
-  top: 70%;
-  left: 40%;
-}
-
-@media (max-width: 1080px) {
-  .RSVPButton {
-    left: 5%;
-  }
-}
-
-@media (max-width: 940px) {
-  .RSVPButton {
-    left: 3%;
-  }
-
-  .RSVPList {
-    left: 43%;
-  }
-}
-
-@media (max-width: 835px) {
-  .RSVPButton {
-    left: 3%;
-  }
-
-  .RSVPList {
-    left: 50%;
-  }
-}
-
-@media (max-width: 768px) {
-  .RSVPButton {
-    top: 1%;
-    left: 2.2%;
-  }
-
-  .RSVPList {
-    top: 1%;
-    left: 70%;
-  }
-}
-
-@media (max-width: 510px) {
-  .RSVPButton {
-    top: 1%;
-    left: 2.2%;
-  }
-
-  .RSVPList {
-    top: 15%;
-    left: 2.2%;
+    top: 50%;  
   }
 }
