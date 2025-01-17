@@ -516,7 +516,7 @@ const TexasHoldEm: React.FC = () => {
     const maxBet = Math.max(...players.map((player) => player.totalBet));
     const decision = Math.random();
 
-    if (decision < 0.3) {
+    if (decision < 0.15) {
       fold();
   } else if (decision < 0.7) {
       call();
