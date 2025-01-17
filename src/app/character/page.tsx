@@ -30,7 +30,7 @@ const StatPage: React.FC = () => {
     (stats: { ST: number; DX: number; IQ: number; HT: number }, remainingPoints: number) => {
       setCharacterData((prev) => ({ ...prev, stats, characterPoints: remainingPoints }));
     },
-    [] // Memoized to prevent re-renders
+    []
   );
 
   const handleFatOptionChange = (fatType: string | null, points: number) => {
@@ -38,6 +38,14 @@ const StatPage: React.FC = () => {
       ...prev,
       fatType: fatType,
       characterPoints: prev.characterPoints + points, // Add/subtract points based on fat type
+    }));
+  };
+
+  const handleHeightChange = (height: string, weight: string) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      height: height,
+      weight: weight, // Store dynamically updated weight
     }));
   };
 
@@ -65,9 +73,7 @@ const StatPage: React.FC = () => {
       component: (
         <HeightSelector
           ST={characterData.stats.ST}
-          onHeightChange={(height, weight) =>
-            setCharacterData((prev) => ({ ...prev, height, weight }))
-          }
+          onHeightChange={handleHeightChange} // Use the standalone handler
           onFatOptionChange={handleFatOptionChange} // Pass fat option handler
           fatType={characterData.fatType} // Pass the selected fat type
         />

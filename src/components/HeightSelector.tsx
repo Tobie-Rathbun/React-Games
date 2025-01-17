@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 interface HeightSelectorProps {
   ST: number; // Strength value from the selected stats
@@ -47,12 +47,12 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   // Filter available heights based on ST
   const availableOptions = heightWeightMap.filter((entry) => entry.ST <= ST);
 
-  const handleSelectHeight = (height: string, weight: number) => {
+  const handleSelectHeight = useCallback((height: string, weight: number) => {
     setSelectedHeight(height);
     setBaseWeight(weight); // Store base weight
-    setCalculatedWeight(`${weight} lbs.`); // Default calculated weight is the base weight
+    setCalculatedWeight(`${weight} lbs.`); // Default calculated weight
     onHeightChange(height, `${weight} lbs.`); // Pass base weight to parent
-  };
+  }, [onHeightChange]);
 
   const handleSelectFat = (fatLabel: string, points: number) => {
     if (fatType === fatLabel) {
@@ -64,14 +64,20 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
     }
   };
 
-  // Calculate weight dynamically based on selected fat type
   useEffect(() => {
     if (baseWeight !== null) {
       const selectedFatOption = fatOptions.find((option) => option.label === fatType);
       const weightModifier = selectedFatOption ? selectedFatOption.weightModifier : 1;
-      setCalculatedWeight(`${Math.round(baseWeight * weightModifier)} lbs.`); // Apply modifier to base weight
+      const newWeight = Math.round(baseWeight * weightModifier);
+      const newWeightString = `${newWeight} lbs.`;
+      setCalculatedWeight(newWeightString);
+
+      // Only call onHeightChange if the height and weight are valid
+      if (selectedHeight && newWeightString !== calculatedWeight) {
+        onHeightChange(selectedHeight, newWeightString);
+      }
     }
-  }, [baseWeight, fatType]); // Recalculate when base weight or fat type changes
+  }, [baseWeight, fatType, selectedHeight]); // Removed `onHeightChange` from dependencies
 
   return (
     <div className="height-selector">
