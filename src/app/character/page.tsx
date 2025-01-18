@@ -12,7 +12,7 @@ import SkillSelector from "@/components/SkillSelector";
 
 interface CharacterData {
   name: string;
-  stats: { ST: number; DX: number; IQ: number; HT: number };
+  stats: { ST: number; DX: number; IQ: number; HT: number }; // Stats added
   height: string;
   weight: string;
   characterPoints: number;
@@ -20,7 +20,7 @@ interface CharacterData {
   traits: Record<string, string>;
   attributes: Record<string, number>;
   statuses: Record<string, number>;
-  disadvantages: string[]; // Store selected disadvantages
+  disadvantages: string[];
   skills: Record<string, string>;
 }
 
@@ -28,7 +28,7 @@ const StatPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [characterData, setCharacterData] = useState<CharacterData>({
     name: "",
-    stats: { ST: 10, DX: 10, IQ: 10, HT: 10 },
+    stats: { ST: 10, DX: 10, IQ: 10, HT: 10 }, // Initialize stats
     height: "",
     weight: "",
     characterPoints: 100,
@@ -46,8 +46,8 @@ const StatPage: React.FC = () => {
       SocialStatus: 0,
       Wealth: 0,
     },
-    disadvantages: [], // Initialize disadvantages as empty array
-    skills: {}, // Initialize skills data
+    disadvantages: [],
+    skills: {},
   });
 
   const handleStatSave = useCallback(
@@ -130,10 +130,10 @@ const StatPage: React.FC = () => {
       component: (
         <HeightSelector
           ST={characterData.stats.ST}
-          onHeightChange={handleHeightChange} // Use the standalone handler
+          onHeightChange={handleHeightChange}
           onFatOptionChange={handleFatOptionChange}
           fatType={characterData.fatType}
-          selectedHeight={characterData.height} // Pass selected height here
+          selectedHeight={characterData.height}
         />
       ),
       isValid: () => characterData.height.trim().length > 0 && characterData.fatType !== null,
@@ -181,16 +181,17 @@ const StatPage: React.FC = () => {
           characterPoints={characterData.characterPoints}
         />
       ),
-      isValid: () => characterData.disadvantages.length > 0, // Ensure at least one disadvantage is selected
+      isValid: () => characterData.disadvantages.length > 0,
     },
     {
       component: (
         <SkillSelector
           initialPoints={characterData.characterPoints}
-          onSave={handleSkillSave} // Pass the handler for saving skills
+          stats={characterData.stats} // Pass stats here
+          onSave={handleSkillSave}
         />
       ),
-      isValid: () => Object.keys(characterData.skills).length > 0, // Ensure at least one skill is selected
+      isValid: () => Object.keys(characterData.skills).length > 0,
     },
   ];
 

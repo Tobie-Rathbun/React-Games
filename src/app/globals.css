@@ -1842,3 +1842,14 @@ span.emoji {
   background-color: var(--highlight-color);
   color: white;
 }
+
+.skill-selector button:disabled {
+  background-color: #dcdcdc; /* Light gray color for disabled state */
+  color: #a0a0a0; /* Dark gray text for disabled state */
+  cursor: not-allowed; /* Change the cursor to indicate disabled */
+  opacity: 0.6; /* Make the disabled buttons appear slightly faded */
+}
+
+.skill-selector button.selected:disabled {
+  background-color: #a0a0a0; /* Slightly darker gray for selected disabled buttons */
+}
