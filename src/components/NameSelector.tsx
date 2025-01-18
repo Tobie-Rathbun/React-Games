@@ -17,7 +17,6 @@ const NameSelector: React.FC<NameSelectorProps> = ({ name, onNameChange, onEnter
 
   return (
     <div className="name-step">
-      <label htmlFor="character-name">Enter your character's name:</label>
       <input
         type="text"
         id="character-name"

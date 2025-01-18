@@ -1652,3 +1652,75 @@ span.emoji {
   left: 8%;
   top: 26%;
 }
+
+.name-step {
+  position: fixed;
+  left: 15%;
+}
+
+.trait-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content vertically */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: relative; /* Allow normal positioning */
+  padding: 30px;
+  background-color: var(--chord-element-border); /* Background color */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+  margin: 0 auto; /* Center the container */
+}
+
+.trait-selector h2 {
+  color: var(--accent-color-dark); /* Header color */
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.trait-group {
+  margin-bottom: 20px; /* Space between trait groups */
+}
+
+.trait-group h3 {
+  color: var(--highlight-color); /* Trait group header color */
+}
+
+.trait-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.trait-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.trait-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.trait-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.trait-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.trait-text {
+  text-align: center;
+}

@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import StatSelector from "@components/StatSelector";
 import NameSelector from "@components/NameSelector";
 import HeightSelector from "@components/HeightSelector";
+import TraitSelector from "@/components/TraitSelector";
 
 interface CharacterData {
   name: string;
@@ -11,21 +12,23 @@ interface CharacterData {
   height: string;
   weight: string;
   characterPoints: number;
-  fatType: string | null; // Store fat type
+  fatType: string | null;
+  traits: Record<string, string>; // Store selected traits
 }
 
+
 const StatPage: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState(0); // Start on the first component
+  const [currentStep, setCurrentStep] = useState(0);
   const [characterData, setCharacterData] = useState<CharacterData>({
     name: "",
     stats: { ST: 10, DX: 10, IQ: 10, HT: 10 },
     height: "",
     weight: "",
-    characterPoints: 100, // Initial character points
-    fatType: null, // Initially no fat type selected
+    characterPoints: 100,
+    fatType: null,
+    traits: {}, // Initialize as an empty object
   });
 
-  // Memoize handleStatSave to prevent unnecessary re-renders
   const handleStatSave = useCallback(
     (stats: { ST: number; DX: number; IQ: number; HT: number }, remainingPoints: number) => {
       setCharacterData((prev) => ({ ...prev, stats, characterPoints: remainingPoints }));
@@ -37,7 +40,7 @@ const StatPage: React.FC = () => {
     setCharacterData((prev) => ({
       ...prev,
       fatType: fatType,
-      characterPoints: prev.characterPoints + points, // Add/subtract points based on fat type
+      characterPoints: prev.characterPoints + points,
     }));
   };
 
@@ -45,9 +48,18 @@ const StatPage: React.FC = () => {
     setCharacterData((prev) => ({
       ...prev,
       height: height,
-      weight: weight, // Store dynamically updated weight
+      weight: weight,
     }));
   };
+
+  const handleTraitChange = (trait: string, option: string | null, points: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      traits: { ...prev.traits, [trait]: option || "" }, // Update or clear the trait selection
+      characterPoints: prev.characterPoints + points, // Adjust points
+    }));
+  };
+  
 
   const steps = [
     {
@@ -64,7 +76,7 @@ const StatPage: React.FC = () => {
       component: (
         <StatSelector
           initialPoints={characterData.characterPoints}
-          onSave={handleStatSave} // Pass the stable handler
+          onSave={handleStatSave}
         />
       ),
       isValid: () => true,
@@ -73,12 +85,21 @@ const StatPage: React.FC = () => {
       component: (
         <HeightSelector
           ST={characterData.stats.ST}
-          onHeightChange={handleHeightChange} // Use the standalone handler
-          onFatOptionChange={handleFatOptionChange} // Pass fat option handler
-          fatType={characterData.fatType} // Pass the selected fat type
+          onHeightChange={handleHeightChange}
+          onFatOptionChange={handleFatOptionChange}
+          fatType={characterData.fatType}
         />
       ),
-      isValid: () => characterData.height.trim().length > 0 && characterData.fatType !== null, // Require both height and fatType
+      isValid: () => characterData.height.trim().length > 0 && characterData.fatType !== null,
+    },
+    {
+      component: (
+        <TraitSelector
+          traits={characterData.traits}
+          onTraitChange={handleTraitChange}
+        />
+      ),
+      isValid: () => Object.keys(characterData.traits).length > 0, // Require at least one trait to proceed
     },
   ];
 
@@ -148,3 +169,4 @@ const StatPage: React.FC = () => {
 };
 
 export default StatPage;
+
