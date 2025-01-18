@@ -1,44 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface StatusSelectorProps {
+  statuses: Record<string, number>; // Receive current status values from parent
   initialPoints?: number;
-  onSave: (statuses: Record<string, number>, remainingPoints: number) => void;
+  onSave: (statuses: Record<string, number>, remainingPoints: number) => void; // Callback to save updated data
 }
 
-const initialStatuses = {
-  MilitaryStatus: 0,
-  SocialStatus: 0,
-  Wealth: 0,
+const statusCosts: Record<string, number> = {
+  MilitaryStatus: 5,
+  SocialStatus: 5,
+  Wealth: 5,
 };
 
-const StatusSelector: React.FC<StatusSelectorProps> = ({ initialPoints = 100, onSave }) => {
-  const [statuses, setStatuses] = useState<Record<string, number>>(initialStatuses);
+const statusRanges: Record<string, { min: number; max: number }> = {
+  MilitaryStatus: { min: 0, max: 5 },
+  SocialStatus: { min: -5, max: 10 },
+  Wealth: { min: -5, max: 10 },
+};
+
+const StatusSelector: React.FC<StatusSelectorProps> = ({ statuses, initialPoints = 100, onSave }) => {
   const [remainingPoints, setRemainingPoints] = useState<number>(initialPoints);
-
-  // Define the cost per level for each status
-  const statusCosts: Record<string, number> = {
-    MilitaryStatus: 5,
-    SocialStatus: 5,
-    Wealth: 5,
-  };
-
-  // Define the valid ranges for each status
-  const statusRanges: Record<string, { min: number; max: number }> = {
-    MilitaryStatus: { min: 0, max: 5 },
-    SocialStatus: { min: -5, max: 10 },
-    Wealth: { min: -5, max: 10 },
-  };
+  const [localStatuses, setLocalStatuses] = useState<Record<string, number>>(statuses);
 
   // Calculate cost based on level for each status
-  const calculateCost = (status: keyof typeof initialStatuses, level: number) => {
+  const calculateCost = (status: keyof typeof statusCosts, level: number) => {
     return level * statusCosts[status];
   };
 
   // Handle level changes for each status
-  const handleLevelChange = (status: keyof typeof initialStatuses, direction: "increase" | "decrease") => {
-    const currentLevel = statuses[status];
+  const handleLevelChange = (status: keyof typeof statusRanges, direction: "increase" | "decrease") => {
+    const currentLevel = localStatuses[status];
     const newLevel = direction === "increase" ? currentLevel + 1 : currentLevel - 1;
 
     const { min, max } = statusRanges[status];
@@ -49,30 +42,35 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({ initialPoints = 100, on
     const costDifference = newCost - currentCost;
 
     if (remainingPoints - costDifference >= 0) {
-      setStatuses((prev) => ({ ...prev, [status]: newLevel }));
+      setLocalStatuses((prev) => ({ ...prev, [status]: newLevel }));
       setRemainingPoints((prev) => prev - costDifference);
-      onSave({ ...statuses, [status]: newLevel }, remainingPoints - costDifference); // Save immediately
+      onSave({ ...localStatuses, [status]: newLevel }, remainingPoints - costDifference); // Save immediately
     }
   };
+
+  // Sync with parent when statuses change
+  useEffect(() => {
+    setLocalStatuses(statuses); // Ensure local state reflects the parent state
+  }, [statuses]);
 
   return (
     <div className="level-selector">
       <div className="stat-container">
-        {Object.keys(statuses).map((status) => (
+        {Object.keys(localStatuses).map((status) => (
           <div key={status} className="stat">
             <button
               className="arrow left"
-              onClick={() => handleLevelChange(status as keyof typeof initialStatuses, "decrease")}
+              onClick={() => handleLevelChange(status as keyof typeof statusRanges, "decrease")}
             >
               &#8592;
             </button>
             <div className="stat-info">
               <h2>{status}</h2>
-              <p>{statuses[status as keyof typeof initialStatuses]}</p>
+              <p>{localStatuses[status as keyof typeof localStatuses]}</p>
             </div>
             <button
               className="arrow right"
-              onClick={() => handleLevelChange(status as keyof typeof initialStatuses, "increase")}
+              onClick={() => handleLevelChange(status as keyof typeof statusRanges, "increase")}
             >
               &#8594;
             </button>

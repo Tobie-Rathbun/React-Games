@@ -8,7 +8,7 @@ const CharacterCreation: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [characterData, setCharacterData] = useState({
     name: "",
-    stats: { ST: 10, DX: 10, IQ: 10, HT: 10 },
+    stats: { ST: 10, DX: 10, IQ: 10, HT: 10 }, // Your stats
   });
 
   const steps = [
@@ -27,6 +27,7 @@ const CharacterCreation: React.FC = () => {
       component: (
         <StatSelector
           initialPoints={100}
+          levels={characterData.stats} // Pass the levels (stats) here
           onSave={(stats) =>
             setCharacterData((prev) => ({ ...prev, stats }))
           }

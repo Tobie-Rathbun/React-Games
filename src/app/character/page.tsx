@@ -17,7 +17,7 @@ interface CharacterData {
   fatType: string | null;
   traits: Record<string, string>;
   attributes: Record<string, number>;
-  statuses: Record<string, number>; // Store selected statuses
+  statuses: Record<string, number>;
 }
 
 const StatPage: React.FC = () => {
@@ -37,7 +37,7 @@ const StatPage: React.FC = () => {
       Navigation: 0,
       Willpower: 0,
     },
-    statuses: { // Initialize statuses
+    statuses: {
       MilitaryStatus: 0,
       SocialStatus: 0,
       Wealth: 0,
@@ -51,14 +51,23 @@ const StatPage: React.FC = () => {
     []
   );
 
-  const handleFatOptionChange = (fatType: string | null, points: number) => {
+  const handleAttributeSave = (attributes: Record<string, number>, remainingPoints: number) => {
     setCharacterData((prev) => ({
       ...prev,
-      fatType: fatType,
-      characterPoints: prev.characterPoints + points,
+      attributes,
+      characterPoints: remainingPoints,
     }));
   };
 
+  const handleStatusSave = (statuses: Record<string, number>, remainingPoints: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      statuses,
+      characterPoints: remainingPoints,
+    }));
+  };
+
+  // Handle height and weight change
   const handleHeightChange = (height: string, weight: string) => {
     setCharacterData((prev) => ({
       ...prev,
@@ -67,27 +76,12 @@ const StatPage: React.FC = () => {
     }));
   };
 
-  const handleTraitChange = (trait: string, option: string | null, points: number) => {
+  // Handle fat option changes and update character points
+  const handleFatOptionChange = (fatType: string | null, points: number) => {
     setCharacterData((prev) => ({
       ...prev,
-      traits: { ...prev.traits, [trait]: option || "" },
+      fatType: fatType,
       characterPoints: prev.characterPoints + points,
-    }));
-  };
-
-  const handleAttributeSave = (attributes: Record<string, number>, remainingPoints: number) => {
-    setCharacterData((prev) => ({
-      ...prev,
-      attributes, // Update attributes
-      characterPoints: remainingPoints, // Update points
-    }));
-  };
-
-  const handleStatusSave = (statuses: Record<string, number>, remainingPoints: number) => {
-    setCharacterData((prev) => ({
-      ...prev,
-      statuses, // Update statuses
-      characterPoints: remainingPoints, // Update points
     }));
   };
 
@@ -106,6 +100,7 @@ const StatPage: React.FC = () => {
       component: (
         <StatSelector
           initialPoints={characterData.characterPoints}
+          levels={characterData.stats}
           onSave={handleStatSave}
         />
       ),
@@ -115,9 +110,10 @@ const StatPage: React.FC = () => {
       component: (
         <HeightSelector
           ST={characterData.stats.ST}
-          onHeightChange={handleHeightChange}
+          onHeightChange={handleHeightChange} // Use the standalone handler
           onFatOptionChange={handleFatOptionChange}
           fatType={characterData.fatType}
+          selectedHeight={characterData.height} // Pass selected height here
         />
       ),
       isValid: () => characterData.height.trim().length > 0 && characterData.fatType !== null,
@@ -126,7 +122,13 @@ const StatPage: React.FC = () => {
       component: (
         <TraitSelector
           traits={characterData.traits}
-          onTraitChange={handleTraitChange}
+          onTraitChange={(trait, option, points) =>
+            setCharacterData((prev) => ({
+              ...prev,
+              traits: { ...prev.traits, [trait]: option || "" },
+              characterPoints: prev.characterPoints + points,
+            }))
+          }
         />
       ),
       isValid: () => Object.keys(characterData.traits).length > 0,
@@ -134,6 +136,7 @@ const StatPage: React.FC = () => {
     {
       component: (
         <AttributeSelector
+          attributes={characterData.attributes}
           initialPoints={characterData.characterPoints}
           onSave={handleAttributeSave}
         />
@@ -143,11 +146,12 @@ const StatPage: React.FC = () => {
     {
       component: (
         <StatusSelector
+          statuses={characterData.statuses}
           initialPoints={characterData.characterPoints}
-          onSave={handleStatusSave} // Pass the handler for saving statuses
+          onSave={handleStatusSave}
         />
       ),
-      isValid: () => Object.values(characterData.statuses).every((val) => val >= 0), // Ensure all statuses are valid
+      isValid: () => Object.values(characterData.statuses).every((val) => val >= 0),
     },
   ];
 

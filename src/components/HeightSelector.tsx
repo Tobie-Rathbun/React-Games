@@ -7,6 +7,7 @@ interface HeightSelectorProps {
   onHeightChange: (height: string, weight: string) => void;
   onFatOptionChange: (fatType: string | null, points: number) => void; // Callback to update fat type and points
   fatType: string | null; // Track selected fat type
+  selectedHeight: string | null; // Persisted height value from parent
 }
 
 const heightWeightMap = [
@@ -39,8 +40,8 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   onHeightChange,
   onFatOptionChange,
   fatType,
+  selectedHeight,
 }) => {
-  const [selectedHeight, setSelectedHeight] = useState<string | null>(null);
   const [baseWeight, setBaseWeight] = useState<number | null>(null);
   const [calculatedWeight, setCalculatedWeight] = useState<string | null>(null);
 
@@ -50,13 +51,14 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   // Filter available heights based on ST
   const availableOptions = heightWeightMap.filter((entry) => entry.ST <= ST);
 
+  // Handle height selection
   const handleSelectHeight = useCallback((height: string, weight: number) => {
-    setSelectedHeight(height);
     setBaseWeight(weight); // Store base weight
     setCalculatedWeight(`${weight} lbs.`); // Default calculated weight
     onHeightChange(height, `${weight} lbs.`); // Pass base weight to parent
   }, [onHeightChange]);
 
+  // Handle fat type selection
   const handleSelectFat = (fatLabel: string, points: number) => {
     if (fatType === fatLabel) {
       // Deselect if the same fat type is selected again
@@ -75,6 +77,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
     }
   };
 
+  // Recalculate weight based on fat type whenever selected height or fat type changes
   useEffect(() => {
     if (baseWeight !== null) {
       const selectedFatOption = fatOptions.find((option) => option.label === fatType);

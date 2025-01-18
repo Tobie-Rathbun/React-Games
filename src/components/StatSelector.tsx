@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../app/globals.css";
 
 interface StatSelectorProps {
   initialPoints?: number;
+  levels: { ST: number; DX: number; IQ: number; HT: number }; // Receiving stats as prop
   onSave?: (stats: { ST: number; DX: number; IQ: number; HT: number }, remainingPoints: number) => void;
 }
 
-const StatSelector: React.FC<StatSelectorProps> = ({ initialPoints = 100, onSave }) => {
-  const initialLevels = { ST: 10, DX: 10, IQ: 10, HT: 10 };
-  const [levels, setLevels] = useState(initialLevels);
+const StatSelector: React.FC<StatSelectorProps> = ({ initialPoints = 100, levels, onSave }) => {
   const [remainingPoints, setRemainingPoints] = useState(initialPoints);
+  const [statLevels, setStatLevels] = useState(levels);
 
   const calculateCost = (level: number) => {
     if (level <= 9) return (level - 10) * 10;
@@ -20,8 +20,8 @@ const StatSelector: React.FC<StatSelectorProps> = ({ initialPoints = 100, onSave
     return 0;
   };
 
-  const handleLevelChange = (stat: keyof typeof initialLevels, direction: "increase" | "decrease") => {
-    const currentLevel = levels[stat];
+  const handleLevelChange = (stat: keyof typeof statLevels, direction: "increase" | "decrease") => {
+    const currentLevel = statLevels[stat];
     const newLevel = direction === "increase" ? currentLevel + 1 : currentLevel - 1;
 
     if (newLevel < 1 || newLevel > 20) return;
@@ -31,7 +31,7 @@ const StatSelector: React.FC<StatSelectorProps> = ({ initialPoints = 100, onSave
     const costDifference = newCost - currentCost;
 
     if (remainingPoints - costDifference >= 0) {
-      setLevels((prev) => ({ ...prev, [stat]: newLevel }));
+      setStatLevels((prev) => ({ ...prev, [stat]: newLevel }));
       setRemainingPoints((prev) => prev - costDifference);
     }
   };
@@ -39,28 +39,28 @@ const StatSelector: React.FC<StatSelectorProps> = ({ initialPoints = 100, onSave
   // Automatically save levels whenever they change
   React.useEffect(() => {
     if (onSave) {
-      onSave(levels, remainingPoints);
+      onSave(statLevels, remainingPoints);
     }
-  }, [levels, remainingPoints, onSave]);
+  }, [statLevels, remainingPoints, onSave]);
 
   return (
     <div className="level-selector">
       <div className="stat-container">
-        {Object.keys(levels).map((stat) => (
+        {Object.keys(statLevels).map((stat) => (
           <div key={stat} className="stat">
             <button
               className="arrow left"
-              onClick={() => handleLevelChange(stat as keyof typeof initialLevels, "decrease")}
+              onClick={() => handleLevelChange(stat as keyof typeof statLevels, "decrease")}
             >
               &#8592;
             </button>
             <div className="stat-info">
               <h2>{stat}</h2>
-              <p>{levels[stat as keyof typeof initialLevels]}</p>
+              <p>{statLevels[stat as keyof typeof statLevels]}</p>
             </div>
             <button
               className="arrow right"
-              onClick={() => handleLevelChange(stat as keyof typeof initialLevels, "increase")}
+              onClick={() => handleLevelChange(stat as keyof typeof statLevels, "increase")}
             >
               &#8594;
             </button>
