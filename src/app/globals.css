@@ -1724,3 +1724,121 @@ span.emoji {
 .trait-text {
   text-align: center;
 }
+
+.disadvantage-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: fixed; /* Stay within the viewport and allow scrolling if needed */
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjust for exact center alignment */
+  background-color: var(--chord-element-border); /* Rounded container background */
+  padding: 30px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+}
+
+.disadvantage-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.disadvantage-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.disadvantage-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.disadvantage-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.disadvantage-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.disadvantage-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.skill-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--chord-element-border);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 1000px;
+  overflow: auto;
+}
+
+.skill-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px;
+}
+
+.skill-selector .skill-category {
+  margin-bottom: 30px;
+}
+
+.skill-selector ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+
+.skill-selector li {
+  margin: 0;
+}
+
+.skill-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--accent-color-dark);
+  color: var(--text-color);
+  transition: background-color 0.3s;
+}
+
+.skill-selector button:hover {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.skill-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}

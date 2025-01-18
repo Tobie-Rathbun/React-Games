@@ -6,7 +6,9 @@ import NameSelector from "@components/NameSelector";
 import HeightSelector from "@components/HeightSelector";
 import TraitSelector from "@/components/TraitSelector";
 import AttributeSelector from "@/components/AttributeSelector";
-import StatusSelector from "@/components/StatusSelector"; // Import StatusSelector
+import StatusSelector from "@/components/StatusSelector";
+import DisadvantageSelector from "@/components/DisadvantageSelector";
+import SkillSelector from "@/components/SkillSelector";
 
 interface CharacterData {
   name: string;
@@ -18,6 +20,8 @@ interface CharacterData {
   traits: Record<string, string>;
   attributes: Record<string, number>;
   statuses: Record<string, number>;
+  disadvantages: string[]; // Store selected disadvantages
+  skills: Record<string, string>;
 }
 
 const StatPage: React.FC = () => {
@@ -42,6 +46,8 @@ const StatPage: React.FC = () => {
       SocialStatus: 0,
       Wealth: 0,
     },
+    disadvantages: [], // Initialize disadvantages as empty array
+    skills: {}, // Initialize skills data
   });
 
   const handleStatSave = useCallback(
@@ -50,6 +56,14 @@ const StatPage: React.FC = () => {
     },
     []
   );
+
+  const handleSkillSave = (skills: Record<string, string>, remainingPoints: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      skills,
+      characterPoints: remainingPoints,
+    }));
+  };
 
   const handleAttributeSave = (attributes: Record<string, number>, remainingPoints: number) => {
     setCharacterData((prev) => ({
@@ -67,7 +81,14 @@ const StatPage: React.FC = () => {
     }));
   };
 
-  // Handle height and weight change
+  const handleDisadvantageChange = (disadvantages: string[], remainingPoints: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      disadvantages,
+      characterPoints: remainingPoints,
+    }));
+  };
+
   const handleHeightChange = (height: string, weight: string) => {
     setCharacterData((prev) => ({
       ...prev,
@@ -76,7 +97,6 @@ const StatPage: React.FC = () => {
     }));
   };
 
-  // Handle fat option changes and update character points
   const handleFatOptionChange = (fatType: string | null, points: number) => {
     setCharacterData((prev) => ({
       ...prev,
@@ -152,6 +172,25 @@ const StatPage: React.FC = () => {
         />
       ),
       isValid: () => Object.values(characterData.statuses).every((val) => val >= 0),
+    },
+    {
+      component: (
+        <DisadvantageSelector
+          disadvantages={characterData.disadvantages}
+          onDisadvantageChange={handleDisadvantageChange}
+          characterPoints={characterData.characterPoints}
+        />
+      ),
+      isValid: () => characterData.disadvantages.length > 0, // Ensure at least one disadvantage is selected
+    },
+    {
+      component: (
+        <SkillSelector
+          initialPoints={characterData.characterPoints}
+          onSave={handleSkillSave} // Pass the handler for saving skills
+        />
+      ),
+      isValid: () => Object.keys(characterData.skills).length > 0, // Ensure at least one skill is selected
     },
   ];
 
