@@ -44,6 +44,9 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   const [baseWeight, setBaseWeight] = useState<number | null>(null);
   const [calculatedWeight, setCalculatedWeight] = useState<string | null>(null);
 
+  // Track the previous fat type for point reversal
+  const [previousFatType, setPreviousFatType] = useState<string | null>(null);
+
   // Filter available heights based on ST
   const availableOptions = heightWeightMap.filter((entry) => entry.ST <= ST);
 
@@ -57,10 +60,18 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
   const handleSelectFat = (fatLabel: string, points: number) => {
     if (fatType === fatLabel) {
       // Deselect if the same fat type is selected again
-      onFatOptionChange(null, -points); // Reverse the operation
+      const previousPoints = fatOptions.find((option) => option.label === previousFatType)?.points || 0;
+      onFatOptionChange(null, -previousPoints); // Reverse the points for the previous fat type
+      setPreviousFatType(null); // Reset previous fat type
     } else {
-      // Select a new fat type
+      // Reverse the points for the previous fat type first
+      if (previousFatType) {
+        const previousPoints = fatOptions.find((option) => option.label === previousFatType)?.points || 0;
+        onFatOptionChange(null, -previousPoints); // Reverse the points for the previous selection
+      }
+      // Select a new fat type and apply its points
       onFatOptionChange(fatLabel, points);
+      setPreviousFatType(fatLabel); // Store the new fat type
     }
   };
 
@@ -77,7 +88,7 @@ const HeightSelector: React.FC<HeightSelectorProps> = ({
         onHeightChange(selectedHeight, newWeightString);
       }
     }
-  }, [baseWeight, fatType, selectedHeight]); // Removed `onHeightChange` from dependencies
+  }, [baseWeight, fatType, selectedHeight]); // Recalculate weight based on fat type
 
   return (
     <div className="height-selector">

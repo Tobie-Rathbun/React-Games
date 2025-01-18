@@ -5,6 +5,7 @@ import StatSelector from "@components/StatSelector";
 import NameSelector from "@components/NameSelector";
 import HeightSelector from "@components/HeightSelector";
 import TraitSelector from "@/components/TraitSelector";
+import AttributeSelector from "@/components/AttributeSelector"; // Import AttributeSelector
 
 interface CharacterData {
   name: string;
@@ -13,9 +14,9 @@ interface CharacterData {
   weight: string;
   characterPoints: number;
   fatType: string | null;
-  traits: Record<string, string>; // Store selected traits
+  traits: Record<string, string>;
+  attributes: Record<string, number>; // Store selected attributes
 }
-
 
 const StatPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -26,7 +27,14 @@ const StatPage: React.FC = () => {
     weight: "",
     characterPoints: 100,
     fatType: null,
-    traits: {}, // Initialize as an empty object
+    traits: {},
+    attributes: {
+      Alertness: 0,
+      Charisma: 0,
+      Climbing: 0,
+      Navigation: 0,
+      Willpower: 0,
+    },
   });
 
   const handleStatSave = useCallback(
@@ -55,11 +63,19 @@ const StatPage: React.FC = () => {
   const handleTraitChange = (trait: string, option: string | null, points: number) => {
     setCharacterData((prev) => ({
       ...prev,
-      traits: { ...prev.traits, [trait]: option || "" }, // Update or clear the trait selection
-      characterPoints: prev.characterPoints + points, // Adjust points
+      traits: { ...prev.traits, [trait]: option || "" },
+      characterPoints: prev.characterPoints + points,
     }));
   };
-  
+
+  const handleAttributeSave = (attributes: Record<string, number>, remainingPoints: number) => {
+    // Update the attributes directly and save the remaining points
+    setCharacterData((prev) => ({
+      ...prev,
+      attributes, // Update attributes
+      characterPoints: remainingPoints, // Update points
+    }));
+  };
 
   const steps = [
     {
@@ -99,7 +115,16 @@ const StatPage: React.FC = () => {
           onTraitChange={handleTraitChange}
         />
       ),
-      isValid: () => Object.keys(characterData.traits).length > 0, // Require at least one trait to proceed
+      isValid: () => Object.keys(characterData.traits).length > 0,
+    },
+    {
+      component: (
+        <AttributeSelector
+          initialPoints={characterData.characterPoints}
+          onSave={handleAttributeSave} // Pass the handler for saving attributes
+        />
+      ),
+      isValid: () => Object.values(characterData.attributes).every((val) => val >= 0), // Ensure all attributes are valid
     },
   ];
 
@@ -169,4 +194,3 @@ const StatPage: React.FC = () => {
 };
 
 export default StatPage;
-
