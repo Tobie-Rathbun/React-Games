@@ -200,29 +200,33 @@ const StatPage: React.FC = () => {
       alert("Please complete all required fields before proceeding.");
       return;
     }
-
+  
     if (currentStep === steps.length - 1) {
-      // Submit to backend
       try {
-        const response = await fetch("/api/characters", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CHAR_URL}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(characterData),
         });
-
+  
+        const data = await response.json();
+        console.log("Response from backend:", data);
+  
         if (!response.ok) {
           throw new Error("Failed to save character");
         }
-
+  
         alert("Character saved successfully!");
       } catch (error) {
-        console.error(error);
+        console.error("Error saving character:", error);
         alert("An error occurred while saving the character.");
       }
     } else {
       setCurrentStep((prev) => prev + 1);
     }
   };
+  
+  
 
   const handlePrevious = () => {
     if (currentStep > 0) {
