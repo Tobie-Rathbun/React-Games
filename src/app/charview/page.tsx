@@ -50,7 +50,7 @@ const CharacterViewer: React.FC = () => {
   // Fetch selected character details
   const fetchCharacterDetails = async (id: string) => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/character/${id}`; // Adjust to fetch specific character by ID
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/viewCharacters/${id}`; // Adjust to fetch specific character by ID
       const response = await fetch(apiUrl);
 
       if (response.ok) {
