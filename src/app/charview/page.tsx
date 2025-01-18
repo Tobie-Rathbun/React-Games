@@ -53,6 +53,25 @@ const CharacterViewer: React.FC = () => {
     setSelectedCharacter(selected || null); // Set the selected character or null if not found
   };
 
+  // Handle deleting a character
+  const handleDeleteCharacter = async (id: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/deleteCharacter/${id}`, {
+        method: "DELETE", // Use DELETE HTTP method
+      });
+
+      if (response.ok) {
+        console.log(`Character with id ${id} deleted.`);
+        setCharacters((prev) => prev.filter((character) => character.id !== id)); // Update state to remove the deleted character
+        setSelectedCharacter(null); // Deselect character after deletion
+      } else {
+        console.error("Failed to delete character:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting character:", error);
+    }
+  };
+
   return (
     <div className="character-viewer">
       <h1>Character Viewer</h1>
@@ -60,13 +79,21 @@ const CharacterViewer: React.FC = () => {
       <div className="character-buttons">
         {characters.length > 0 ? (
           characters.map((character) => (
-            <button
-              key={character.id}
-              onClick={() => handleCharacterSelect(character.id)}
-              className={`character-button ${selectedCharacter?.id === character.id ? 'selected' : ''}`}
-            >
-              {character.name}
-            </button>
+            <div key={character.id} className="character-button-container">
+              <button
+                onClick={() => handleCharacterSelect(character.id)}
+                className={`character-button ${selectedCharacter?.id === character.id ? 'selected' : ''}`}
+              >
+                {character.name}
+              </button>
+              {/* Red X button for deleting */}
+              <button
+                onClick={() => handleDeleteCharacter(character.id)}
+                className="delete-button"
+              >
+                X
+              </button>
+            </div>
           ))
         ) : (
           <p>Loading characters...</p>

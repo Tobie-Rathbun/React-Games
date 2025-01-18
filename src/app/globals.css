@@ -1856,6 +1856,7 @@ span.emoji {
 
 
 
+/* Character Viewer */
 /* General styling for the character viewer */
 .character-viewer {
   font-family: Arial, sans-serif;
@@ -1876,7 +1877,7 @@ span.emoji {
   margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: var(--accent-color-dark); /* Initial green color */
+  background-color: var(--accent-color-dark);
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -1884,27 +1885,19 @@ span.emoji {
 }
 
 .character-button.selected {
-  background-color: var(--highlight-color); /* Highlighted color when selected */
+  background-color: var(--highlight-color); /* Use your highlight color */
 }
 
 .character-button:hover {
-  background-color: var(--accent-color); /* Hover effect */
+  background-color: var(--accent-color);
 }
 
-/* Styling for the character details container (always visible) */
-.character-details-container {
-  padding: 20px;
-  margin-top: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
+/* Styling for the character details */
 .character-details {
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #f9f9f9;
 }
 
 .character-details h2 {
@@ -1933,6 +1926,5 @@ span.emoji {
 strong {
   font-weight: bold;
 }
-
 
 
