@@ -5,7 +5,8 @@ import StatSelector from "@components/StatSelector";
 import NameSelector from "@components/NameSelector";
 import HeightSelector from "@components/HeightSelector";
 import TraitSelector from "@/components/TraitSelector";
-import AttributeSelector from "@/components/AttributeSelector"; // Import AttributeSelector
+import AttributeSelector from "@/components/AttributeSelector";
+import StatusSelector from "@/components/StatusSelector"; // Import StatusSelector
 
 interface CharacterData {
   name: string;
@@ -15,7 +16,8 @@ interface CharacterData {
   characterPoints: number;
   fatType: string | null;
   traits: Record<string, string>;
-  attributes: Record<string, number>; // Store selected attributes
+  attributes: Record<string, number>;
+  statuses: Record<string, number>; // Store selected statuses
 }
 
 const StatPage: React.FC = () => {
@@ -34,6 +36,11 @@ const StatPage: React.FC = () => {
       Climbing: 0,
       Navigation: 0,
       Willpower: 0,
+    },
+    statuses: { // Initialize statuses
+      MilitaryStatus: 0,
+      SocialStatus: 0,
+      Wealth: 0,
     },
   });
 
@@ -69,10 +76,17 @@ const StatPage: React.FC = () => {
   };
 
   const handleAttributeSave = (attributes: Record<string, number>, remainingPoints: number) => {
-    // Update the attributes directly and save the remaining points
     setCharacterData((prev) => ({
       ...prev,
       attributes, // Update attributes
+      characterPoints: remainingPoints, // Update points
+    }));
+  };
+
+  const handleStatusSave = (statuses: Record<string, number>, remainingPoints: number) => {
+    setCharacterData((prev) => ({
+      ...prev,
+      statuses, // Update statuses
       characterPoints: remainingPoints, // Update points
     }));
   };
@@ -121,10 +135,19 @@ const StatPage: React.FC = () => {
       component: (
         <AttributeSelector
           initialPoints={characterData.characterPoints}
-          onSave={handleAttributeSave} // Pass the handler for saving attributes
+          onSave={handleAttributeSave}
         />
       ),
-      isValid: () => Object.values(characterData.attributes).every((val) => val >= 0), // Ensure all attributes are valid
+      isValid: () => Object.values(characterData.attributes).every((val) => val >= 0),
+    },
+    {
+      component: (
+        <StatusSelector
+          initialPoints={characterData.characterPoints}
+          onSave={handleStatusSave} // Pass the handler for saving statuses
+        />
+      ),
+      isValid: () => Object.values(characterData.statuses).every((val) => val >= 0), // Ensure all statuses are valid
     },
   ];
 
