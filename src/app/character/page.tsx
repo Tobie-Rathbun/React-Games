@@ -108,23 +108,27 @@ const StatPage: React.FC = () => {
   // Function to save the character to the database
   const saveCharacter = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/character`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/createCharacter`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(characterData),
       });
-
-      const data = await response.json();
+  
+      const text = await response.text(); // Read the response as text
+      console.log("Response from backend:", text); // Log the response text
+  
       if (response.ok) {
+        const data = JSON.parse(text); // Parse it manually
         alert(`Character created with ID: ${data.id}`);
       } else {
-        alert(data.error || "An error occurred while saving the character.");
+        alert(text); // Display the error message directly
       }
     } catch (error) {
       console.error("Error creating character:", error);
       alert("Failed to save character.");
     }
   };
+  
 
   const steps = [
     {

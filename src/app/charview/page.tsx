@@ -26,25 +26,26 @@ const CharacterViewer: React.FC = () => {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/character`; // Adjust URL if needed
-        const response = await fetch(apiUrl);
-
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/viewCharacters`);
+        
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched characters:", data); // Log the full response data
-          setCharacters(data.characters); // Store the characters in state
+          if (data && data.characters) {
+            setCharacters(data.characters);
+          } else {
+            console.error("No 'characters' field in the response:", data);
+          }
         } else {
           console.error("Failed to fetch characters. Status:", response.status);
-          const errorText = await response.text();
-          console.error("Error details:", errorText);
         }
       } catch (error) {
         console.error("Error fetching characters:", error);
       }
     };
-
+  
     fetchCharacters();
   }, []);
+  
 
   // Fetch selected character details
   const fetchCharacterDetails = async (id: string) => {

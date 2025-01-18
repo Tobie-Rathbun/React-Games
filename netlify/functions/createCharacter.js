@@ -1,67 +1,11 @@
 const { Pool } = require("pg");
 
-// Create a pool connection to your database using the connection string
 const pool = new Pool({
-  connectionString: process.env.COCKROACHDB_URL, // Your connection string from .env
+  connectionString: process.env.COCKROACHDB_URL, // your connection string
 });
 
 exports.handler = async (event) => {
-  // Handling GET requests to fetch all characters (no path parameters)
-  if (event.httpMethod === "GET" && !event.pathParameters) {
-    try {
-      const query = "SELECT * FROM characters"; // Fetch all columns from the characters table
-      const result = await pool.query(query);
-
-      if (result.rows.length === 0) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ error: "No characters found" }),
-        };
-      }
-
-      // Return all characters as a JSON object
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ characters: result.rows }), // Return the list of characters
-      };
-    } catch (error) {
-      console.error("Error fetching characters:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Failed to fetch characters" }),
-      };
-    }
-  }
-
-  // Handling GET requests to fetch a specific character by ID (with path parameters)
-  if (event.httpMethod === "GET" && event.pathParameters && event.pathParameters.id) {
-    try {
-      const { id } = event.pathParameters; // Extract the character ID from the URL
-      const query = "SELECT * FROM characters WHERE id = $1"; // Fetch character by ID
-      const result = await pool.query(query, [id]);
-
-      if (result.rows.length === 0) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ error: "Character not found" }),
-        };
-      }
-
-      // Return the full character details as a JSON object
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ character: result.rows[0] }),
-      };
-    } catch (error) {
-      console.error("Error fetching character details:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Failed to fetch character details" }),
-      };
-    }
-  }
-
-  // Handling POST requests to insert a new character
+  // Handling POST requests to create a new character
   if (event.httpMethod === "POST") {
     try {
       const {
@@ -101,7 +45,6 @@ exports.handler = async (event) => {
         };
       }
 
-      // Insert character data into the database
       const query = `
         INSERT INTO characters (name, stats, height, weight, character_points, fat_type, traits, attributes, statuses, disadvantages, skills)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
@@ -110,7 +53,7 @@ exports.handler = async (event) => {
 
       const values = [
         name,
-        JSON.stringify(stats), // Store stats as JSON
+        JSON.stringify(stats),
         height,
         weight,
         characterPoints,
@@ -122,7 +65,6 @@ exports.handler = async (event) => {
         JSON.stringify(skills),
       ];
 
-      // Execute the query to insert the data into the database
       const result = await pool.query(query, values);
 
       return {
@@ -138,7 +80,6 @@ exports.handler = async (event) => {
     }
   }
 
-  // If the method is not GET or POST, return Method Not Allowed
   return {
     statusCode: 405,
     body: JSON.stringify({ error: "Method Not Allowed" }),
