@@ -105,6 +105,27 @@ const StatPage: React.FC = () => {
     }));
   };
 
+  // Function to save the character to the database
+  const saveCharacter = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/character`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(characterData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Character created with ID: ${data.id}`);
+      } else {
+        alert(data.error || "An error occurred while saving the character.");
+      }
+    } catch (error) {
+      console.error("Error creating character:", error);
+      alert("Failed to save character.");
+    }
+  };
+
   const steps = [
     {
       component: (
@@ -200,33 +221,14 @@ const StatPage: React.FC = () => {
       alert("Please complete all required fields before proceeding.");
       return;
     }
-  
+
     if (currentStep === steps.length - 1) {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_CHAR_URL}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(characterData),
-        });
-  
-        const data = await response.json();
-        console.log("Response from backend:", data);
-  
-        if (!response.ok) {
-          throw new Error("Failed to save character");
-        }
-  
-        alert("Character saved successfully!");
-      } catch (error) {
-        console.error("Error saving character:", error);
-        alert("An error occurred while saving the character.");
-      }
+      // Save character when final step is reached
+      await saveCharacter();
     } else {
       setCurrentStep((prev) => prev + 1);
     }
   };
-  
-  
 
   const handlePrevious = () => {
     if (currentStep > 0) {

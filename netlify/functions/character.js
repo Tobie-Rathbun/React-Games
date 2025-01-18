@@ -1,15 +1,69 @@
 const { Pool } = require("pg");
 
-// Use the shared connection string from .env
+// Create a pool connection to your database using the connection string
 const pool = new Pool({
-  connectionString: process.env.COCKROACHDB_URL,
+  connectionString: process.env.COCKROACHDB_URL, // Your connection string from .env
 });
 
-exports.handler = async (event, context) => {
-  console.log("Received body:", event.body);
+exports.handler = async (event) => {
+  // Handling GET requests to fetch all characters (no path parameters)
+  if (event.httpMethod === "GET" && !event.pathParameters) {
+    try {
+      const query = "SELECT * FROM characters"; // Fetch all columns from the characters table
+      const result = await pool.query(query);
+
+      if (result.rows.length === 0) {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ error: "No characters found" }),
+        };
+      }
+
+      // Return all characters as a JSON object
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ characters: result.rows }), // Return the list of characters
+      };
+    } catch (error) {
+      console.error("Error fetching characters:", error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to fetch characters" }),
+      };
+    }
+  }
+
+  // Handling GET requests to fetch a specific character by ID (with path parameters)
+  if (event.httpMethod === "GET" && event.pathParameters && event.pathParameters.id) {
+    try {
+      const { id } = event.pathParameters; // Extract the character ID from the URL
+      const query = "SELECT * FROM characters WHERE id = $1"; // Fetch character by ID
+      const result = await pool.query(query, [id]);
+
+      if (result.rows.length === 0) {
+        return {
+          statusCode: 404,
+          body: JSON.stringify({ error: "Character not found" }),
+        };
+      }
+
+      // Return the full character details as a JSON object
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ character: result.rows[0] }),
+      };
+    } catch (error) {
+      console.error("Error fetching character details:", error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to fetch character details" }),
+      };
+    }
+  }
+
+  // Handling POST requests to insert a new character
   if (event.httpMethod === "POST") {
     try {
-      // Parse the request body
       const {
         name,
         stats,
@@ -36,14 +90,24 @@ exports.handler = async (event, context) => {
         };
       }
 
-      // Construct the query to insert character data into the database
+      // Check if the character already exists in the database
+      const checkQuery = "SELECT id FROM characters WHERE name = $1";
+      const checkResult = await pool.query(checkQuery, [name]);
+
+      if (checkResult.rows.length > 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "Character with this name already exists" }),
+        };
+      }
+
+      // Insert character data into the database
       const query = `
         INSERT INTO characters (name, stats, height, weight, character_points, fat_type, traits, attributes, statuses, disadvantages, skills)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id
       `;
-      
-      // Values to insert into the database
+
       const values = [
         name,
         JSON.stringify(stats), // Store stats as JSON
@@ -58,17 +122,9 @@ exports.handler = async (event, context) => {
         JSON.stringify(skills),
       ];
 
-      // Log the query and values before executing
-      console.log("Executing query:", query);
-      console.log("With values:", values);
-
       // Execute the query to insert the data into the database
       const result = await pool.query(query, values);
 
-      // Log the result of the query
-      console.log("Query result:", result.rows[0].id);
-
-      // Return a success response
       return {
         statusCode: 201,
         body: JSON.stringify({ message: "Character created", id: result.rows[0].id }),
@@ -82,7 +138,7 @@ exports.handler = async (event, context) => {
     }
   }
 
-  // If the method is not POST, return Method Not Allowed
+  // If the method is not GET or POST, return Method Not Allowed
   return {
     statusCode: 405,
     body: JSON.stringify({ error: "Method Not Allowed" }),
