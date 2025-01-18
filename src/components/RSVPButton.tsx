@@ -25,7 +25,7 @@ const RSVPButton = ({
   useEffect(() => {
     const fetchRSVPs = async () => {
       try {
-        const response = await axios.get<FetchRSVPResponse>(`${process.env.NEXT_PUBLIC_API_URL}`);
+        const response = await axios.get<FetchRSVPResponse>(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`);
         setSpotsLeft(response.data.spotsLeft);
         setRsvpList(response.data.rsvpList);
       } catch (err: unknown) {
@@ -50,7 +50,7 @@ const RSVPButton = ({
     }
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}`, { name });
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/rsvp`, { name });
       setSpotsLeft(spotsLeft - 1);
       setRsvpList([...rsvpList, name.trim()]);
       setName("");

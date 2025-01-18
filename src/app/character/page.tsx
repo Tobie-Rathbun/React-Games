@@ -203,7 +203,7 @@ const StatPage: React.FC = () => {
   
     if (currentStep === steps.length - 1) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_CHAR_URL}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/characters`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(characterData),
