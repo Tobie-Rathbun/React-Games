@@ -1853,3 +1853,86 @@ span.emoji {
 .skill-selector button.selected:disabled {
   background-color: #a0a0a0; /* Slightly darker gray for selected disabled buttons */
 }
+
+
+
+/* General styling for the character viewer */
+.character-viewer {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Button styling */
+.character-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.character-button {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: var(--accent-color-dark); /* Initial green color */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.character-button.selected {
+  background-color: var(--highlight-color); /* Highlighted color when selected */
+}
+
+.character-button:hover {
+  background-color: var(--accent-color); /* Hover effect */
+}
+
+/* Styling for the character details container (always visible) */
+.character-details-container {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.character-details {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.character-details h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.character-details h3 {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.character-details p, .character-details ul {
+  font-size: 16px;
+}
+
+.character-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.character-details li {
+  margin-bottom: 5px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+
+

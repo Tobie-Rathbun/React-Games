@@ -22,7 +22,7 @@ const CharacterViewer: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
 
-  // Fetch all characters from the backend API
+  // Fetch all characters from the backend API and store them in state
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
@@ -30,6 +30,7 @@ const CharacterViewer: React.FC = () => {
         
         if (response.ok) {
           const data = await response.json();
+          console.log("Fetched characters:", data); // Check the response structure
           if (data && data.characters) {
             setCharacters(data.characters);
           } else {
@@ -45,25 +46,11 @@ const CharacterViewer: React.FC = () => {
   
     fetchCharacters();
   }, []);
-  
 
-  // Fetch selected character details
-  const fetchCharacterDetails = async (id: string) => {
-    try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/viewCharacters/${id}`; // Adjust to fetch specific character by ID
-      const response = await fetch(apiUrl);
-
-      if (response.ok) {
-        const data = await response.json();
-        setSelectedCharacter(data.character); // Store selected character details in state
-      } else {
-        console.error("Failed to fetch character details. Status:", response.status);
-        const errorText = await response.text();
-        console.error("Error details:", errorText);
-      }
-    } catch (error) {
-      console.error("Error fetching character details:", error);
-    }
+  // Set selected character from the stored characters in state
+  const handleCharacterSelect = (id: string) => {
+    const selected = characters.find((character) => character.id === id);
+    setSelectedCharacter(selected || null); // Set the selected character or null if not found
   };
 
   return (
@@ -75,7 +62,8 @@ const CharacterViewer: React.FC = () => {
           characters.map((character) => (
             <button
               key={character.id}
-              onClick={() => fetchCharacterDetails(character.id)}
+              onClick={() => handleCharacterSelect(character.id)}
+              className={`character-button ${selectedCharacter?.id === character.id ? 'selected' : ''}`}
             >
               {character.name}
             </button>
@@ -85,64 +73,69 @@ const CharacterViewer: React.FC = () => {
         )}
       </div>
 
-      {selectedCharacter && (
-        <div className="character-details">
-          <h2>{selectedCharacter.name}</h2>
-          <p><strong>Height:</strong> {selectedCharacter.height}</p>
-          <p><strong>Weight:</strong> {selectedCharacter.weight}</p>
-          <p><strong>Character Points:</strong> {selectedCharacter.characterPoints}</p>
-          <p><strong>Fat Type:</strong> {selectedCharacter.fatType || "N/A"}</p>
+      {/* Persistent container for character details */}
+      <div className="character-details-container">
+        {selectedCharacter ? (
+          <div className="character-details">
+            <h2>{selectedCharacter.name}</h2>
+            <p><strong>Height:</strong> {selectedCharacter.height}</p>
+            <p><strong>Weight:</strong> {selectedCharacter.weight}</p>
+            <p><strong>Character Points:</strong> {selectedCharacter.characterPoints}</p>
+            <p><strong>Fat Type:</strong> {selectedCharacter.fatType || "N/A"}</p>
 
-          <h3>Stats</h3>
-          <p><strong>ST:</strong> {selectedCharacter.stats.ST}</p>
-          <p><strong>DX:</strong> {selectedCharacter.stats.DX}</p>
-          <p><strong>IQ:</strong> {selectedCharacter.stats.IQ}</p>
-          <p><strong>HT:</strong> {selectedCharacter.stats.HT}</p>
+            <h3>Stats</h3>
+            <p><strong>ST:</strong> {selectedCharacter.stats.ST}</p>
+            <p><strong>DX:</strong> {selectedCharacter.stats.DX}</p>
+            <p><strong>IQ:</strong> {selectedCharacter.stats.IQ}</p>
+            <p><strong>HT:</strong> {selectedCharacter.stats.HT}</p>
 
-          <h3>Traits</h3>
-          <ul>
-            {Object.entries(selectedCharacter.traits).map(([trait, value]) => (
-              <li key={trait}>
-                <strong>{trait}:</strong> {value}
-              </li>
-            ))}
-          </ul>
+            <h3>Traits</h3>
+            <ul>
+              {Object.entries(selectedCharacter.traits).map(([trait, value]) => (
+                <li key={trait}>
+                  <strong>{trait}:</strong> {value}
+                </li>
+              ))}
+            </ul>
 
-          <h3>Attributes</h3>
-          <ul>
-            {Object.entries(selectedCharacter.attributes).map(([attribute, value]) => (
-              <li key={attribute}>
-                <strong>{attribute}:</strong> {value}
-              </li>
-            ))}
-          </ul>
+            <h3>Attributes</h3>
+            <ul>
+              {Object.entries(selectedCharacter.attributes).map(([attribute, value]) => (
+                <li key={attribute}>
+                  <strong>{attribute}:</strong> {value}
+                </li>
+              ))}
+            </ul>
 
-          <h3>Statuses</h3>
-          <ul>
-            {Object.entries(selectedCharacter.statuses).map(([status, value]) => (
-              <li key={status}>
-                <strong>{status}:</strong> {value}
-              </li>
-            ))}
-          </ul>
+            <h3>Statuses</h3>
+            <ul>
+              {Object.entries(selectedCharacter.statuses).map(([status, value]) => (
+                <li key={status}>
+                  <strong>{status}:</strong> {value}
+                </li>
+              ))}
+            </ul>
 
-          <h3>Disadvantages</h3>
-          <ul>
-            {selectedCharacter.disadvantages.map((disadvantage, index) => (
-              <li key={index}>{disadvantage}</li>
-            ))}
-          </ul>
+            <h3>Disadvantages</h3>
+            <ul>
+              {selectedCharacter.disadvantages.map((disadvantage, index) => (
+                <li key={index}>{disadvantage}</li>
+              ))}
+            </ul>
 
-          <h3>Skills</h3>
-          <ul>
-            {Object.entries(selectedCharacter.skills).map(([skill, value]) => (
-              <li key={skill}>
-                <strong>{skill}:</strong> {value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+            <h3>Skills</h3>
+            <ul>
+              {Object.entries(selectedCharacter.skills).map(([skill, value]) => (
+                <li key={skill}>
+                  <strong>{skill}:</strong> {value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p>Select a character to view details</p>
+        )}
+      </div>
     </div>
   );
 };
