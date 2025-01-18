@@ -1532,3 +1532,399 @@ span.emoji {
     top: 52%;  
   }
 }
+
+
+
+
+/* RPG Stats */
+.stat-container {
+  background-color: var(--chord-element-border);
+  width: 20%; /* Container width */
+  border-radius: 15px; /* Smoothly round the edges */
+  padding: 20px; /* Add padding for spacing */
+  margin: auto; /* Centers horizontally */
+  position: fixed; /* Keeps the container within the viewport */
+  top: 50%; /* Position vertically relative to the viewport */
+  left: 66%; /* Position horizontally relative to the viewport */
+  transform: translate(-50%, -40%); /* Adjust to move it slightly downward */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for better visuals */
+  overflow: auto; /* Prevent content from being cut off */
+}
+
+.stat {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
+  gap: 10px; /* Space between items */
+}
+
+.stat-info {
+  text-align: center;
+  min-width: 50px; /* Ensure consistent width for numbers */
+  font-size: 1rem;
+}
+
+.stat-info h2 {
+  color: var(--highlight-color); /* Change text color of h2 */
+  margin: 0; /* Remove default margins */
+}
+
+.arrow {
+  background-color: var(--highlight-color);
+  color: var(--text-color);
+  border: none;
+  padding: 10px 15px;
+  font-size: 1.5rem;
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.arrow:hover {
+  background-color: var(--accent-color);
+}
+
+.level-selector h1 {
+  position: fixed;
+  top: 50%;
+  left: 15%;
+}
+
+.height-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: fixed; /* Stay within the viewport and allow scrolling if needed */
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjust for exact center alignment */
+  background-color: var(--chord-element-border); /* Rounded container background */
+  padding: 30px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+}
+
+.height-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.height-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.height-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.height-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.height-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.height-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.points-text {
+  position: fixed;
+  left: 8%;
+  top: 26%;
+}
+
+.name-step {
+  position: fixed;
+  left: 15%;
+}
+
+.trait-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content vertically */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: relative; /* Allow normal positioning */
+  padding: 30px;
+  background-color: var(--chord-element-border); /* Background color */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+  margin: 0 auto; /* Center the container */
+}
+
+.trait-selector h2 {
+  color: var(--accent-color-dark); /* Header color */
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.trait-group {
+  margin-bottom: 20px; /* Space between trait groups */
+}
+
+.trait-group h3 {
+  color: var(--highlight-color); /* Trait group header color */
+}
+
+.trait-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.trait-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.trait-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.trait-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.trait-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.trait-text {
+  text-align: center;
+}
+
+.disadvantage-selector {
+  display: flex;
+  flex-direction: column; /* Stack header and content */
+  align-items: center; /* Center contents horizontally */
+  justify-content: center; /* Center contents vertically */
+  position: fixed; /* Stay within the viewport and allow scrolling if needed */
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Adjust for exact center alignment */
+  background-color: var(--chord-element-border); /* Rounded container background */
+  padding: 30px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  width: 80%; /* Take up more horizontal space */
+  max-width: 1000px; /* Limit the maximum width */
+  overflow: auto; /* Prevent content cutoff */
+}
+
+.disadvantage-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px; /* Space between header and list */
+}
+
+.disadvantage-selector ul {
+  display: flex; /* Use flexbox for inline items */
+  flex-wrap: wrap; /* Allow wrapping to the next row if needed */
+  gap: 20px; /* Space between items */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center; /* Center items horizontally */
+}
+
+.disadvantage-selector li {
+  margin: 0; /* Remove margin to rely on gap spacing */
+}
+
+.disadvantage-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Rounder buttons */
+  cursor: pointer;
+  background-color: var(--accent-color-dark); /* Default button background */
+  color: var(--text-color); /* Default button text color */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.disadvantage-selector button:hover {
+  background-color: var(--highlight-color); /* Change color on hover */
+  color: white;
+}
+
+.disadvantage-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.skill-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--chord-element-border);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 1000px;
+  overflow: auto;
+}
+
+.skill-selector h2 {
+  color: var(--accent-color-dark);
+  margin-bottom: 20px;
+}
+
+.skill-selector .skill-category {
+  margin-bottom: 30px;
+}
+
+.skill-selector ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+
+.skill-selector li {
+  margin: 0;
+}
+
+.skill-selector button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--accent-color-dark);
+  color: var(--text-color);
+  transition: background-color 0.3s;
+}
+
+.skill-selector button:hover {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.skill-selector button.selected {
+  background-color: var(--highlight-color);
+  color: white;
+}
+
+.skill-selector button:disabled {
+  background-color: #dcdcdc; /* Light gray color for disabled state */
+  color: #a0a0a0; /* Dark gray text for disabled state */
+  cursor: not-allowed; /* Change the cursor to indicate disabled */
+  opacity: 0.6; /* Make the disabled buttons appear slightly faded */
+}
+
+.skill-selector button.selected:disabled {
+  background-color: #a0a0a0; /* Slightly darker gray for selected disabled buttons */
+}
+
+
+
+/* Character Viewer */
+/* General styling for the character viewer */
+.character-viewer {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Button styling */
+.character-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.character-button {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: var(--accent-color-dark);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.character-button.selected {
+  background-color: var(--highlight-color); /* Use your highlight color */
+}
+
+.character-button:hover {
+  background-color: var(--accent-color);
+}
+
+/* Styling for the character details */
+.character-details {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.character-details h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.character-details h3 {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.character-details p, .character-details ul {
+  font-size: 16px;
+}
+
+.character-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.character-details li {
+  margin-bottom: 5px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+
