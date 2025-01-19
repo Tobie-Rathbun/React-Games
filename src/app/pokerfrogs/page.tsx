@@ -5,8 +5,9 @@ import React, { useState, useEffect } from 'react';
 import * as BABYLON from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import { HotKeys } from 'react-hotkeys';
-import PokerGUI from '@components/PokerGUI';
-import DebugPanel from '@components/DebugPanel';
+import PokerGUI from '@/components/pokerfrogs/PokerGUI';
+import DebugPanel from '@/components/pokerfrogs/DebugPanel';
+import "./styles.css";
 
 export const dynamic = 'force-dynamic';
 

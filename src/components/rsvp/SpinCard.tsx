@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as BABYLON from "@babylonjs/core";
 import "@babylonjs/loaders";
+import "./styles.css";
 
 const validCards = [
   "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "0H", "JH", "QH", "KH", "AH",

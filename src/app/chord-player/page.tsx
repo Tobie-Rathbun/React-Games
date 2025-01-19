@@ -1,4 +1,4 @@
-import ChordPlayer from '../../components/ChordPlayer';
+import ChordPlayer from '../../components/site/ChordPlayer';
 
 export const dynamic = 'force-dynamic';
 

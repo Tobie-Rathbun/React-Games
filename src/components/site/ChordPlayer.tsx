@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as Tone from 'tone';
+import "./site.css";
 
 // Dynamically generate pianoSounds from static files
 const generatePianoSounds = () => {

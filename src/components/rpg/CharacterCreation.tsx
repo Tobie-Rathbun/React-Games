@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import NameStep from "@/components/NameSelector";
-import StatSelector from "@components/StatSelector";
+import NameStep from "@/components/rpg/selectors/NameSelector";
+import StatSelector from "@/components/rpg/selectors/StatSelector";
 
 const CharacterCreation: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);

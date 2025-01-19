@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import SpinCard from "@components/SpinCard";
-import TitleCard from "@components/TitleCard";
-import RSVPButton from "@/components/RSVPButton";
+import SpinCard from "@/components/rsvp/SpinCard";
+import TitleCard from "@/components/rsvp/TitleCard";
+import RSVPButton from "@/components/rsvp/RSVPButton";
 // import RSVPList from "@/components/RSVPList";
 export const dynamic = "force-dynamic";
 

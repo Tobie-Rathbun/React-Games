@@ -1,0 +1,267 @@
+/* SiteNavbar */
+.navbar-wrapper {
+    z-index: 9991;
+  }
+  
+  .site-navbar {
+    display: flex; /* Display items in a flex container */
+    justify-content: space-between; /* Align items evenly along the main axis */
+    align-items: center; /* Center items vertically */
+    background: linear-gradient(
+      45deg,
+      var(--accent-color-dark) 0%,
+      var(--dark-background) 100%
+    );
+    border-radius: 10px; /* Rounded edges */
+    padding: 10px 20px; /* Add padding for space */
+    border: 1px solid #FFFFFF; /* Thin white border */
+    position: relative;
+    z-index: 9990;
+    flex-wrap: nowrap;
+    opacity: 65%;
+    width: 90%;
+    margin: 1% auto;
+    transition: background-position 1s cubic-bezier(0.42, 0, 0.58, 1), 
+      opacity 1s cubic-bezier(0.42, 0, 0.58, 1);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+  }
+  
+  .site-navbar:hover {
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+  
+  .hamburger-button {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--primary-text-color);
+    cursor: pointer;
+  }
+  
+  .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFFFF; /* White text */
+    text-decoration: none; /* Remove underline */
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .navbar-brand:hover {
+    transform: scale(1.05);
+  }
+  
+  .nav-link {
+    color: #FFFFFF; /* White text */
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 20px;
+    text-decoration: none; /* Remove underline */
+    opacity: 0.85; /* Initial opacity for non-active links */
+    transition: opacity 0.4s, transform 0.4s; /* Smooth transition for opacity and transform */
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  
+  .site-navbar .nav-link:hover {
+    opacity: 1; /* Full opacity on hover */
+    transform: scale(1.15);
+  }
+  
+  .site-navbar .nav-link:active {
+    transform: scale(0.95); /* Scale down on click */
+  }
+  
+  /* Dropdown Container */
+  .dropdown {
+    display: inline-flex;
+    align-items: center; /* Aligns toggle button with other navbar links */
+    position: relative;
+    margin-right: 20px; /* Same spacing as other nav-links */
+    margin-top: -2.4%;
+    margin-bottom: -2.4%;
+    white-space: nowrap; /* Prevent line breaks */
+  }
+  
+  /* Dropdown Toggle Button */
+  .dropdown-toggle {
+    background: none; /* Remove background */
+    border: none; /* Remove border */
+    color: #FFFFFF; /* Match navbar link text color */
+    font-size: 18px; /* Match navbar link font size */
+    cursor: pointer;
+    text-decoration: none; /* Remove underline */
+    opacity: 0.85; /* Match initial opacity */
+    transition: opacity 0.4s, transform 0.4s; /* Smooth transitions */
+    margin-left: -4.85%;;
+  }
+  
+  /* Hover Effects for Dropdown Toggle */
+  .dropdown-toggle:hover {
+    opacity: 1; /* Full opacity on hover */
+    transform: scale(1.05); /* Slight scaling for interaction */
+  }
+  
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Align directly below toggle button */
+    left: 0;
+    background-color: var(--accent-color-dark); /* Match navbar background */
+    opacity: 0.9;
+    border: 1px solid white;
+    border-radius: 8px; /* Rounded edges */
+    padding: 10px; /* Inner padding */
+    display: none; /* Hide by default */
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  }
+  
+  /* Show Dropdown Menu When Active */
+  .dropdown:hover .dropdown-menu {
+    display: flex; /* Display dropdown on hover */
+  }
+  
+  /* Links in Dropdown Menu */
+  .dropdown-menu .nav-link {
+    color: #FFFFFF; /* White text */
+    font-size: 16px; /* Slightly smaller than the navbar links */
+    margin: 5px 0; /* Spacing between links */
+    text-decoration: none; /* Remove underline */
+    opacity: 0.65; /* Initial opacity */
+    transition: opacity 0.4s, transform 0.4s; /* Smooth transitions */
+  }
+  
+  /* Hover Effects for Dropdown Links */
+  .dropdown-menu .nav-link:hover {
+    opacity: 1; /* Full opacity on hover */
+    transform: scale(1.05); /* Slight scaling for interaction */
+  }
+  
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: var(--dark-background);
+      border: 1px solid var(--chord-element-border);
+      border-radius: 8px;
+      padding: 10px;
+    }
+  
+    .hamburger-button {
+      display: block;
+    }
+  }
+  
+  
+  /* Loading Animation */
+  .loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid transparent;
+    border-top: 4px solid var(--highlight-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    
+  }
+
+
+
+
+
+
+
+  
+/* Chord Player */
+.chord-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--chord-player-background);
+    border-radius: 8px;
+  }
+  
+  .chord-select, .chord-button {
+    background-color: var(--chord-element-background);
+    color: var(--primary-text-color);
+    border: 1px solid var(--chord-element-border);
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and transform */
+  }
+  
+  .chord-select:focus, .chord-button:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+  }
+  
+  .chord-button {
+    cursor: pointer;
+    background-color: var(--accent-color);
+  }
+  
+  .chord-button:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  .chord-button:active {
+    transform: scale(0.95); /* Slightly reduce on click */
+  }
+  
+  .chord-status {
+    margin-top: 15px;
+  }
+  
+  /* Animations for other buttons and inputs */
+  button:hover, input[type="text"]:hover, input[type="password"]:hover {
+    animation: hoverAnimation 0.3s forwards;
+  }
+  
+  button:active, input[type="text"]:active, input[type="password"]:active {
+    animation: clickAnimation 0.1s forwards;
+  }
+  
+  @keyframes hoverAnimation {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+  }
+  
+  @keyframes clickAnimation {
+    0% { transform: scale(1); }
+    100% { transform: scale(0.95); }
+  }

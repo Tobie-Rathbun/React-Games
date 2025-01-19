@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import "./styles.css";
 
 const RSVPList = ({ rsvpList }: { rsvpList: string[] }) => {
   return (

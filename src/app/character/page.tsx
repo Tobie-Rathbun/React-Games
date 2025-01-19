@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import StatSelector from "@components/StatSelector";
-import NameSelector from "@components/NameSelector";
-import HeightSelector from "@components/HeightSelector";
-import TraitSelector from "@/components/TraitSelector";
-import AttributeSelector from "@/components/AttributeSelector";
-import StatusSelector from "@/components/StatusSelector";
-import DisadvantageSelector from "@/components/DisadvantageSelector";
-import SkillSelector from "@/components/SkillSelector";
+import StatSelector from "@/components/rpg/selectors/StatSelector";
+import NameSelector from "@/components/rpg/selectors/NameSelector";
+import HeightSelector from "@/components/rpg/selectors/HeightSelector";
+import TraitSelector from "@/components/rpg/selectors/TraitSelector";
+import AttributeSelector from "@/components/rpg/selectors/AttributeSelector";
+import StatusSelector from "@/components/rpg/selectors/StatusSelector";
+import DisadvantageSelector from "@/components/rpg/selectors/DisadvantageSelector";
+import SkillSelector from "@/components/rpg/selectors/SkillSelector";
+import "./styles.css";
 
 interface CharacterData {
   name: string;
