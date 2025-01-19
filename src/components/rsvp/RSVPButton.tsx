@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
+import "./styles.css";
 
 interface FetchRSVPResponse {
   spotsLeft: number;

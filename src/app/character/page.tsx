@@ -9,6 +9,7 @@ import AttributeSelector from "@/components/rpg/selectors/AttributeSelector";
 import StatusSelector from "@/components/rpg/selectors/StatusSelector";
 import DisadvantageSelector from "@/components/rpg/selectors/DisadvantageSelector";
 import SkillSelector from "@/components/rpg/selectors/SkillSelector";
+import "./styles.css";
 
 interface CharacterData {
   name: string;

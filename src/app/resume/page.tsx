@@ -1,4 +1,4 @@
-import "./resume.css";
+import "./styles.css";
 
 export default function ResumePage() {
   return (

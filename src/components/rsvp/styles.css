@@ -1,0 +1,202 @@
+
+/* SpinCard Component */
+.spinCard {
+    position: relative;
+    width: 100%; /* Full width of the parent */
+    aspect-ratio: 16 / 9; /* Lock aspect ratio to 16:9 */
+    top: -5%;
+  }
+  
+  /* Ensure the canvas fills the container */
+  .spinCard canvas {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    display: block;
+    outline: none;
+  }
+  
+  
+  /* TitleCard Component */
+  .titleCard {
+    position: absolute;
+    top: 40%; 
+    left: 30%; 
+    transform: translate(-50%, -50%); /* Offset to truly center */
+    z-index: 2; 
+  }
+  
+  /* TitleCard Container */
+  .cardContainer {
+    position: relative;
+    background-color: var(--dark-background);
+    border: 1px solid var(--chord-element-border);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .cardContainer:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Text Styling */
+  .header {
+    font-size: 4rem;
+    color: var(--highlight-color);
+    margin: 0 0 8px;
+  }
+  
+  .subheader {
+    font-size: 1.5rem;
+    color: var(--highlight-color-light);
+    margin: 0 0 16px;
+  }
+  
+  .bio {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  
+  /* RSVP */
+  .RSVPButton {
+    position: absolute;
+    top: 70%;
+    left: 19%;
+  }
+  
+  .RSVPList {
+    position: absolute;
+    top: 70%;
+    left: 40%;
+  }
+  
+  @media (max-width: 2000px) {
+    .RSVPButton {
+      left: 22%;
+    }
+  }
+  
+  @media (max-width: 1080px) {
+    .RSVPButton {
+      left: 15%;
+    }
+  }
+  
+  @media (max-width: 940px) {
+    .RSVPButton {
+      left: 13%;
+    }
+  
+    .RSVPList {
+      left: 43%;
+    }
+  }
+  
+  @media (max-width: 835px) {
+    .RSVPButton {
+      left: 13%;
+    }
+  
+    .RSVPList {
+      left: 50%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .RSVPButton {
+      top: 82%;
+      left: 30%;
+    }
+  
+    .RSVPList {
+      top: 1%;
+      left: 70%;
+    }
+  
+    .titleCard {
+      top: 60%; 
+      left: 50%; 
+      width: 60%;
+    }
+  
+    .spinCard {
+      right: 24%;
+      top: -4%;;
+    }
+  
+    .header {
+      font-size: 3rem;
+      color: var(--highlight-color);
+      margin: 0 0 8px;
+    }
+    
+    .subheader {
+      font-size: 1.5rem;
+      color: var(--highlight-color-light);
+      margin: 0 0 16px;
+    }
+    
+    .bio {
+      font-size: 0.9rem;
+      color: var(--secondary-text-color);
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+  
+  @media (max-width: 660px) {
+    .RSVPButton {
+      top: 75%;
+      left: 23%;
+    }
+  
+    .titleCard {
+      top: 55%;  
+      width: 80%;
+    }
+  
+    .spinCard {
+      top: -3%;
+    }
+  
+    .header {
+      font-size: 2rem;
+      color: var(--highlight-color);
+      margin: 0 0 8px;
+    }
+    
+    .subheader {
+      font-size: 1rem;
+      color: var(--highlight-color-light);
+      margin: 0 0 16px;
+    }
+    
+    .bio {
+      font-size: 0.7rem;
+      color: var(--secondary-text-color);
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+  
+  @media (max-width: 510px) {
+    .RSVPButton {
+      top: 75%;
+      left: 14%;
+    }
+    
+    .spinCard {
+      top: 3%;
+      right: 25%;
+    }
+    
+    .titleCard {
+      top: 52%;  
+    }
+  }

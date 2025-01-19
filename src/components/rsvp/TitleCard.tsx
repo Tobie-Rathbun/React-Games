@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import "../app/globals.css";
+import "./styles.css";
 
 interface TitleCardProps {
   header: string;
