@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import RSVPButton from "@/components/RSVPButton";
-import RSVPList from "@/components/RSVPList";
-import RSVPClear from "@/components/RSVPClear";
+import RSVPButton from "@/components/rsvp/RSVPButton";
+import RSVPList from "@/components/rsvp/RSVPList";
+import RSVPClear from "@/components/rsvp/RSVPClear";
 
 const TestRSVP = () => {
   const [rsvpList, setRsvpList] = useState<string[]>([]); // Shared state for the RSVP list

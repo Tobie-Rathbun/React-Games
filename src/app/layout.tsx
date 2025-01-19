@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import './globals.css';
-import SiteNavbar from "../components/SiteNavbar"; // Adjust the path as needed
-import AnimatedBackground from "@/components/AnimatedBackground";
+import SiteNavbar from "../components/site/SiteNavbar"; // Adjust the path as needed
+import AnimatedBackground from "@/components/site/AnimatedBackground";
 
 
 export const metadata = {
