@@ -1,0 +1,21 @@
+/* Resume */
+
+.resume {
+    width: 75%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 8%;
+    position: absolute;
+  }
+  
+  .resume-link {
+    color: var(--accent-color); /* Use an accent color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth hover effect */
+    margin-top: 40%;
+  }
+  
+  .resume-link:hover {
+    color: var(--highlight-color); /* Change color on hover */
+    text-decoration: underline; /* Optional underline on hover */
+  }

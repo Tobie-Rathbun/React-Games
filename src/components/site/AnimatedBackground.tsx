@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import "../app/globals.css";
+import "./site.css";
 
 const AnimatedBackground: React.FC = () => {
   return (

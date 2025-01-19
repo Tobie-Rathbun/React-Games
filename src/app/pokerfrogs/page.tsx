@@ -7,6 +7,7 @@ import '@babylonjs/loaders/glTF';
 import { HotKeys } from 'react-hotkeys';
 import PokerGUI from '@/components/pokerfrogs/PokerGUI';
 import DebugPanel from '@/components/pokerfrogs/DebugPanel';
+import "./pokerfrogs.css";
 
 export const dynamic = 'force-dynamic';
 

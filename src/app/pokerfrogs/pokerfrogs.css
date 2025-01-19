@@ -1,0 +1,111 @@
+/* Poker Frogs 3D */
+
+#root {
+    height: 100%;
+  }
+  
+  .gui-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: grab;
+  }
+  
+  .gui-container:active {
+    cursor: grabbing;
+  }
+  
+  .debug-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: grab;
+    line-height: 0.5;
+  }
+  
+  
+  .debug-panel p {
+    margin-bottom: 1px; 
+  }
+  
+  .debug-panel:active {
+    cursor: grabbing;
+  }
+  
+  .slider-container {
+    margin-bottom: 10px;
+  }
+  
+  .slider {
+    width: 300px;
+    cursor: pointer;
+  }
+  
+  .horiz-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .gui-button {
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .gui-button:hover {
+    background-color: var(--highlight-color);
+    transform: scale(1.05);
+  }
+  
+  .gui-button:active {
+    transform: scale(0.95);
+  }
+  
+  .purple-gui {
+    background-color: var(--chord-player-background);
+    border: 1px solid var(--chord-element-border);
+    box-shadow: 0 0 10px var(--highlight-color);
+    animation: pulsate 1.5s infinite;
+  }
+  
+  
+  
+  .card-display {
+    position: absolute;
+    top: 70px; /* Adjusted to not overlay on the navbar */
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 10; /* Ensure it overlays on top of everything */
+    font-size: 12px;
+  }
+  
+  
+  
+  .no-scroll {
+    overflow: hidden;
+    height: 100%;
+  }
+  
