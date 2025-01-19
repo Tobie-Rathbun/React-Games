@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import "./styles.css";
 
 // Define the types for the skills data
 interface Skill {

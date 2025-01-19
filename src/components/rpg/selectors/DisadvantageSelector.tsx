@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "./styles.css";
 
 interface DisadvantageSelectorProps {
   disadvantages: string[]; // Array of selected disadvantages

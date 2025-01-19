@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import "./styles.css";
 
 interface AttributeSelectorProps {
   attributes: Record<string, number>; // Pass current attributes as prop
