@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import "../app/globals.css";
+import "./styles.css";
 
 interface StatSelectorProps {
   initialPoints?: number;

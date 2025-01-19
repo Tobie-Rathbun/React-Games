@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "./styles.css";
 
 interface NameSelectorProps {
   name: string;

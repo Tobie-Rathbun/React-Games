@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import "./styles.css";
 
 interface HeightSelectorProps {
   ST: number; // Strength value from the selected stats

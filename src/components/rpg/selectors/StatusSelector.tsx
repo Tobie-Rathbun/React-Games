@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import "./styles.css";
 
 interface StatusSelectorProps {
   statuses: Record<string, number>; // Receive current status values from parent
